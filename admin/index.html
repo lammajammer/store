@@ -1,0 +1,32 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Lamajammer OS</title><link rel="stylesheet" href="/assets/styles.css"><script src="https://accounts.google.com/gsi/client" async defer></script></head><body>
+<div class="topline">Lamajammer OS · Private admin</div><main class="section"><div class="wrap">
+<div class="head"><div><div class="eyebrow">Dad dashboard</div><h1 class="pageTitle">Lamajammer OS</h1></div><a class="btn secondary" href="/">View store</a></div>
+<div id="authPanel" class="panel"><h3>Sign in</h3><p class="small">Only the Google account configured in Vercel as ADMIN_EMAIL can publish or manage products.</p><div id="g_id_onload" data-client_id="REPLACE_WITH_GOOGLE_CLIENT_ID" data-callback="handleCredentialResponse" data-auto_prompt="false"></div><div class="g_id_signin" data-type="standard"></div></div>
+<div id="adminApp" class="hidden">
+<div class="statGrid"><div class="stat"><b id="liveCount">—</b><span>Live</span></div><div class="stat"><b id="soldCount">—</b><span>Sold out</span></div><div class="stat"><b id="orderCount">—</b><span>Orders</span></div><div class="stat"><b id="revenue">—</b><span>Revenue</span></div></div>
+<div class="section" style="padding-bottom:25px"><div class="panel"><div class="eyebrow">Add product</div><h2 style="font:500 34px Georgia">Upload once. Let the system clean it up.</h2>
+<form id="productForm" class="formGrid"><div class="full"><label class="label">Product photos (1–8)</label><input class="input" name="images" type="file" accept="image/*" multiple required><p class="small">AI may recommend crop/exposure cleanup, but may never invent or alter product details.</p></div>
+<div><label class="label">Rough title</label><input class="input" name="title" required placeholder="ex: 2024 dodgers ring"></div><div><label class="label">Price</label><input class="input" name="price" type="number" min="0" step=".01" required></div>
+<div class="full"><label class="label">Rough description (optional)</label><textarea class="textarea" name="description" placeholder="Anything you know about the item"></textarea></div>
+<div><label class="label">Quantity</label><input class="input" name="quantity" type="number" min="1" value="1" required></div><div><label class="label">Shipping price</label><input class="input" name="shipping" type="number" min="0" step=".01" value="0"></div>
+<div class="full"><button class="btn" type="submit">Optimize + Publish</button></div></form><div id="publishStatus" class="small" style="margin-top:12px"></div></div></div>
+<div class="panel"><div class="row"><h3>Products</h3><button class="btn secondary" onclick="loadAdmin()">Refresh</button></div><div style="overflow:auto"><table><thead><tr><th>Product</th><th>Price</th><th>Qty</th><th>Status</th><th>Action</th></tr></thead><tbody id="productRows"></tbody></table></div></div>
+</div></div></main>
+<script>
+let ID_TOKEN='';
+async function handleCredentialResponse(resp){ID_TOKEN=resp.credential;sessionStorage.setItem('lj_token',ID_TOKEN);document.getElementById('authPanel').classList.add('hidden');document.getElementById('adminApp').classList.remove('hidden');loadAdmin()}
+window.addEventListener('load',()=>{const t=sessionStorage.getItem('lj_token');if(t){ID_TOKEN=t;document.getElementById('authPanel').classList.add('hidden');document.getElementById('adminApp').classList.remove('hidden');loadAdmin()}})
+async function loadAdmin(){
+ const r=await fetch('/api/admin-products',{headers:{Authorization:'Bearer '+ID_TOKEN}}); if(!r.ok){sessionStorage.removeItem('lj_token');location.reload();return}
+ const j=await r.json();const ps=j.products||[];document.getElementById('liveCount').textContent=ps.filter(x=>x.status==='live').length;document.getElementById('soldCount').textContent=ps.filter(x=>Number(x.quantity)<=0).length;document.getElementById('orderCount').textContent=j.stats?.orders||0;document.getElementById('revenue').textContent='$'+Number(j.stats?.revenue||0).toFixed(2);
+ document.getElementById('productRows').innerHTML=ps.map(p=>`<tr><td>${p.title}</td><td>${Number(p.price).toFixed(2)}</td><td>${p.quantity}</td><td class="status-${p.status}">${p.status}</td><td><button class="chip" onclick="archiveProduct('${p.id}')">Archive</button></td></tr>`).join('')
+}
+async function archiveProduct(id){if(!confirm('Archive this product?'))return;await fetch('/api/publish-product',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+ID_TOKEN},body:JSON.stringify({action:'archive',productId:id})});loadAdmin()}
+document.getElementById('productForm').addEventListener('submit',async e=>{e.preventDefault();const s=document.getElementById('publishStatus');s.textContent='Preparing product…';
+ const fd=new FormData(e.target);const files=[...fd.getAll('images')];const images=[];
+ for(const f of files){if(!f||!f.size)continue;images.push(await toDataURL(f))}
+ const payload={action:'publish',title:fd.get('title'),description:fd.get('description'),price:Number(fd.get('price')),quantity:Number(fd.get('quantity')),shipping:Number(fd.get('shipping')),images};
+ const r=await fetch('/api/publish-product',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+ID_TOKEN},body:JSON.stringify(payload)});const j=await r.json(); if(!r.ok){s.textContent=j.error||'Publish failed';return}s.textContent='Published successfully.';e.target.reset();loadAdmin()
+})
+function toDataURL(f){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(f)})}
+</script></body></html>

@@ -1,0 +1,8 @@
+{
+  "name": "lamajammer-store",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "stripe": "^18.5.0"
+  }
+}
