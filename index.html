@@ -1,9 +1,265 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Lamajammer Collectibles | Sports Memorabilia & Fan Favorites</title><meta name="description" content="Championship-style rings, jerseys and sports collectibles for fans and collectors."><link rel="stylesheet" href="/assets/styles.css"></head><body><div class="topline">Independent collector shop · Secure direct checkout</div>
-<header><div class="wrap nav"><a class="brand" href="/"><img src="/assets/logo.svg" style="width:46px;height:46px" alt="Lamajammer Collectibles"><div class="brandText"><b>Lamajammer Collectibles</b><span>Sports memorabilia · fan favorites</span></div></a><nav class="navlinks"><a href="/shop/">Shop</a><a href="/about/">About</a><a href="/faq/">FAQ</a><a class="btn" href="/shop/">Browse collection</a></nav></div></header>
-<main><section class="wrap hero"><div><div class="kicker">For fans who remember the season</div><h1>Own the moments that still matter.</h1><p>Championship-style rings, jerseys and sports collectibles curated for fans, gift-givers and collectors who want a piece of the story on their shelf.</p><div class="actions"><a class="btn" href="/shop/">Shop collectibles</a><a class="btn secondary" href="/about/">About the shop</a></div><div class="trust"><b>Small independent seller</b><span>Direct secure checkout</span><span>Fast, simple product discovery</span></div></div>
-<div class="heroArt"><div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div><div class="heroLabel"><small>Collector-first presentation</small>Championship seasons, on display.</div></div></section>
-<div class="band">MLB · NFL · NBA · NHL · championship rings · jerseys · fan collectibles</div>
-<section class="section"><div class="wrap"><div class="head"><div><div class="eyebrow">Shop by league</div><h2>Start with your team.</h2></div><p>The strongest merchandising angle is team identity first: collectors and fan buyers usually shop from emotional attachment, nostalgia and gifting intent—not generic product type alone.</p></div>
-<div class="categories"><a class="cat" href="/shop/?league=MLB"><i>⚾</i><div><span>Baseball</span><b>MLB</b></div></a><a class="cat" href="/shop/?league=NFL"><i>🏈</i><div><span>Football</span><b>NFL</b></div></a><a class="cat" href="/shop/?league=NBA"><i>🏀</i><div><span>Basketball</span><b>NBA</b></div></a><a class="cat" href="/shop/?league=NHL"><i>🏒</i><div><span>Hockey</span><b>NHL</b></div></a></div></div></section>
-<section class="section" style="padding-top:10px"><div class="wrap"><div class="head"><div><div class="eyebrow">Featured collectibles</div><h2>Built for the shelf.</h2></div><p>Clean product cards, dark trophy-case styling and clear pricing keep the shop premium without looking like a sportsbook or mass-market merch warehouse.</p></div><div class="grid" data-featured></div></div></section>
-<section class="section"><div class="wrap aboutBox"><div class="aboutVisual"><strong>A collector’s shop, not a giant catalog.</strong></div><div class="copy"><div class="eyebrow">The Lamajammer idea</div><h2 class="pageTitle">Small shop. Stronger curation.</h2><p>Lamajammer Collectibles is built around the products sports fans actually want to browse: team-first, season-first and gift-friendly. New products are added through a private dashboard, optimized automatically, and published directly to the store.</p><a class="btn" href="/shop/">Browse the collection</a></div></div></section></main><footer><div class="wrap"><div class="footerGrid"><div><h4>Lamajammer Collectibles</h4><p>A small independent shop for championship-style rings, jerseys and sports collectibles.</p></div><div><h4>Shop</h4><a href="/shop/">All products</a><a href="/shop/#rings">Championship rings</a><a href="/shop/#jerseys">Jerseys</a></div><div><h4>Help</h4><a href="/policies/shipping/">Shipping</a><a href="/policies/returns/">Returns</a><a href="/policies/privacy/">Privacy</a><a href="/policies/terms/">Terms</a></div></div><div class="legal">Lamajammer Collectibles is an independent retailer. Team names, league names and trademarks belong to their respective owners. Product listings must accurately state whether an item is licensed, replica, vintage, used or otherwise. Do not imply affiliation or authenticity that cannot be substantiated.</div></div></footer><script src="/assets/app.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Lamajammer OS</title>
+  <link rel="stylesheet" href="/assets/styles.css">
+  <style>
+    .auth-wrap{max-width:560px;margin:80px auto}
+    .auth-row{display:flex;gap:10px}
+    .auth-row .input{flex:1}
+    .top-actions{display:flex;gap:10px;flex-wrap:wrap}
+  </style>
+</head>
+<body>
+<div class="topline">Lamajammer OS · Private Admin</div>
+
+<main class="section">
+  <div class="wrap">
+    <div class="head">
+      <div>
+        <div class="eyebrow">Dad dashboard</div>
+        <h1 class="pageTitle">Lamajammer OS</h1>
+      </div>
+      <div class="top-actions">
+        <a class="btn secondary" href="/">View store</a>
+        <button class="btn secondary hidden" id="logoutBtn" type="button">Log out</button>
+      </div>
+    </div>
+
+    <div id="authPanel" class="panel auth-wrap">
+      <h3>Sign in</h3>
+      <p class="small">Enter the private Lamajammer admin password.</p>
+      <form id="loginForm" class="auth-row">
+        <input class="input" id="password" type="password" autocomplete="current-password" placeholder="Admin password" required>
+        <button class="btn" type="submit">Enter</button>
+      </form>
+      <div id="loginStatus" class="small" style="margin-top:12px"></div>
+    </div>
+
+    <div id="adminApp" class="hidden">
+      <div class="statGrid">
+        <div class="stat"><b id="liveCount">—</b><span>Live</span></div>
+        <div class="stat"><b id="soldCount">—</b><span>Sold out</span></div>
+        <div class="stat"><b id="orderCount">—</b><span>Orders</span></div>
+        <div class="stat"><b id="revenue">—</b><span>Revenue</span></div>
+      </div>
+
+      <div class="section" style="padding-bottom:25px">
+        <div class="panel">
+          <div class="eyebrow">Add product</div>
+          <h2 style="font:500 34px Georgia">Upload once. Let the system clean it up.</h2>
+
+          <form id="productForm" class="formGrid">
+            <div class="full">
+              <label class="label">Product photos (1–8)</label>
+              <input class="input" name="images" type="file" accept="image/*" multiple required>
+              <p class="small">Original images are preserved. No fake product details.</p>
+            </div>
+
+            <div>
+              <label class="label">Rough title</label>
+              <input class="input" name="title" required placeholder="ex: 2024 dodgers ring">
+            </div>
+
+            <div>
+              <label class="label">Price</label>
+              <input class="input" name="price" type="number" min="0" step=".01" required>
+            </div>
+
+            <div>
+              <label class="label">Item cost</label>
+              <input class="input" name="item_cost" type="number" min="0" step=".01" value="0">
+            </div>
+
+            <div>
+              <label class="label">Quantity</label>
+              <input class="input" name="quantity" type="number" min="1" value="1" required>
+            </div>
+
+            <div>
+              <label class="label">Customer shipping charge</label>
+              <input class="input" name="shipping_customer" type="number" min="0" step=".01" value="0">
+            </div>
+
+            <div>
+              <label class="label">Estimated actual shipping cost</label>
+              <input class="input" name="shipping_cost_estimate" type="number" min="0" step=".01" value="0">
+            </div>
+
+            <div>
+              <label class="label">Paid promo budget</label>
+              <input class="input" name="promo_budget_total" type="number" min="0" step=".01" value="0">
+            </div>
+
+            <div class="full">
+              <label class="label">Rough description (optional)</label>
+              <textarea class="textarea" name="description" placeholder="Anything you know about the item"></textarea>
+            </div>
+
+            <div class="full">
+              <button class="btn" type="submit">Optimize + Publish</button>
+            </div>
+          </form>
+
+          <div id="publishStatus" class="small" style="margin-top:12px"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="row">
+          <h3>Products</h3>
+          <button class="btn secondary" type="button" onclick="loadAdmin()">Refresh</button>
+        </div>
+        <div style="overflow:auto">
+          <table>
+            <thead>
+              <tr><th>Product</th><th>Price</th><th>Qty</th><th>Status</th><th>Action</th></tr>
+            </thead>
+            <tbody id="productRows"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+async function api(path, options = {}) {
+  return fetch(path, { credentials: 'include', ...options });
+}
+
+async function checkSession() {
+  const r = await api('/api/admin-products');
+  if (r.ok) {
+    document.getElementById('authPanel').classList.add('hidden');
+    document.getElementById('adminApp').classList.remove('hidden');
+    document.getElementById('logoutBtn').classList.remove('hidden');
+    const j = await r.json();
+    renderAdmin(j);
+  } else {
+    document.getElementById('authPanel').classList.remove('hidden');
+    document.getElementById('adminApp').classList.add('hidden');
+    document.getElementById('logoutBtn').classList.add('hidden');
+  }
+}
+
+function renderAdmin(j) {
+  const ps = j.products || [];
+  document.getElementById('liveCount').textContent = ps.filter(x => x.status === 'live').length;
+  document.getElementById('soldCount').textContent = ps.filter(x => Number(x.quantity) <= 0 || x.status === 'sold').length;
+  document.getElementById('orderCount').textContent = j.stats?.orders || 0;
+  document.getElementById('revenue').textContent = '$' + Number(j.stats?.revenue || 0).toFixed(2);
+  document.getElementById('productRows').innerHTML = ps.map(p => `
+    <tr>
+      <td>${escapeHtml(p.title || '')}</td>
+      <td>$${Number(p.price || 0).toFixed(2)}</td>
+      <td>${Number(p.quantity || 0)}</td>
+      <td>${escapeHtml(p.status || '')}</td>
+      <td><button class="chip" onclick="archiveProduct('${String(p.id).replace(/'/g,"\\'")}')">Archive</button></td>
+    </tr>`).join('');
+}
+
+async function loadAdmin() {
+  const r = await api('/api/admin-products');
+  if (!r.ok) return checkSession();
+  renderAdmin(await r.json());
+}
+
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const status = document.getElementById('loginStatus');
+  status.textContent = 'Signing in…';
+  const r = await api('/api/login', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({password: document.getElementById('password').value})
+  });
+  if (!r.ok) {
+    const j = await r.json().catch(()=>({}));
+    status.textContent = j.error || 'Wrong password.';
+    return;
+  }
+  status.textContent = '';
+  document.getElementById('password').value = '';
+  await checkSession();
+});
+
+document.getElementById('logoutBtn').addEventListener('click', async () => {
+  await api('/api/logout', {method:'POST'});
+  location.reload();
+});
+
+async function archiveProduct(id) {
+  if (!confirm('Archive this product?')) return;
+  const r = await api('/api/publish-product', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'archive', productId:id})
+  });
+  if (!r.ok) alert('Archive failed');
+  loadAdmin();
+}
+
+document.getElementById('productForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const s = document.getElementById('publishStatus');
+  s.textContent = 'Preparing product…';
+
+  const fd = new FormData(e.target);
+  const files = [...fd.getAll('images')];
+  const images = [];
+
+  for (const f of files) {
+    if (!f || !f.size) continue;
+    images.push(await toDataURL(f));
+  }
+
+  const payload = {
+    action:'publish',
+    title: fd.get('title'),
+    description: fd.get('description'),
+    price: Number(fd.get('price') || 0),
+    item_cost: Number(fd.get('item_cost') || 0),
+    quantity: Number(fd.get('quantity') || 1),
+    shipping_customer: Number(fd.get('shipping_customer') || 0),
+    shipping_cost_estimate: Number(fd.get('shipping_cost_estimate') || 0),
+    promo_budget_total: Number(fd.get('promo_budget_total') || 0),
+    images
+  };
+
+  const r = await api('/api/publish-product', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(payload)
+  });
+
+  const j = await r.json().catch(()=>({}));
+  if (!r.ok) {
+    s.textContent = j.error || 'Publish failed';
+    return;
+  }
+
+  s.textContent = 'Sent to product pipeline successfully.';
+  e.target.reset();
+  setTimeout(loadAdmin, 1200);
+});
+
+function toDataURL(f) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => res(r.result);
+    r.onerror = rej;
+    r.readAsDataURL(f);
+  });
+}
+
+function escapeHtml(s='') {
+  return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+checkSession();
+</script>
+</body>
+</html>
