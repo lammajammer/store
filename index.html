@@ -3,22 +3,394 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+
   <title>LammaJammer Collectibles | Sports Memorabilia & Fan Favorites</title>
-  <meta name="description" content="Sports collectibles, championship-style rings, jerseys and fan-cave finds with New England attitude.">
+
+  <meta
+    name="description"
+    content="Sports collectibles, championship-style rings, jerseys and fan-cave finds with New England attitude."
+  >
+
+  <link rel="icon" type="image/png" href="/assets/LJ-logo-circle.png">
+  <link rel="apple-touch-icon" href="/assets/LJ-logo-circle.png">
+
   <link rel="stylesheet" href="/assets/styles.css">
 </head>
+
 <body>
-  <div class="topline">Independent collector shop · No bandwagon required</div>
-  <header><div class="wrap nav"><a class="brand" href="/"><img src="/assets/logo.svg" class="brandLogo" alt="LammaJammer Collectibles"><div class="brandText"><b>LammaJammer Collectibles</b><span>Sports stuff worth arguing about</span></div></a><nav class="navlinks"><a href="/shop/">Shop</a><a href="/about/">Our Story</a><a href="/faq/">FAQ</a><a class="btn" href="/shop/">Raid the collection</a></nav></div></header>
+
+  <div class="topline">
+    Independent collector shop · No bandwagon required
+  </div>
+
+  <header>
+    <div class="wrap nav">
+
+      <a class="brand" href="/" aria-label="LammaJammer Collectibles home">
+        <img
+          src="/assets/LJ-logo-horizontal.png"
+          class="brandLogoHorizontal"
+          alt="LammaJammer Collectibles"
+        >
+      </a>
+
+      <nav class="navlinks">
+        <a href="/shop/">Shop</a>
+        <a href="/about/">Our Story</a>
+        <a href="/faq/">FAQ</a>
+
+        <a class="btn" href="/shop/">
+          Raid the collection
+        </a>
+      </nav>
+
+    </div>
+  </header>
+
+
   <main>
-    <section class="wrap hero"><div><div class="kicker">Built for real fans, not algorithms</div><h1>Your fan cave has standards.</h1><p>Rings, jerseys, memorabilia and oddball sports finds for people who still remember the score, the season, and exactly why the refs were wrong.</p><div class="actions"><a class="btn" href="/shop/">Shop the good stuff</a><a class="btn secondary" href="/about/">Meet LammaJammer</a></div><div class="trust"><b>Independent seller</b><span>Direct secure checkout</span><span>Collector-first listings</span></div></div>
-    <div class="heroArt"><div class="scoreStripe">NEW ENGLAND ATTITUDE · NATIONAL FAN PROBLEMS</div><div class="jerseyNum">617</div><div class="heroBadge">NO<br>BANDWAGONS</div><div class="heroLabel"><small>LammaJammer rule #1</small>If it belongs in the fan cave, it belongs here.</div></div></section>
-    <div class="band">MLB · NFL · NBA · NHL · CHAMPIONSHIP RINGS · JERSEYS · FAN-CAVE FINDS</div>
-    <section class="section"><div class="wrap"><div class="head"><div><div class="eyebrow">Pick your poison</div><h2>Start with the league.</h2></div><p>Team loyalty first. Product type second. Because nobody wakes up thinking, “I need a generic collectible.” They wake up thinking, “I need one more thing with my team on it.”</p></div><div class="categories"><a class="cat" href="/shop/?league=MLB"><i>⚾</i><div><span>Baseball</span><b>MLB</b></div></a><a class="cat" href="/shop/?league=NFL"><i>🏈</i><div><span>Football</span><b>NFL</b></div></a><a class="cat" href="/shop/?league=NBA"><i>🏀</i><div><span>Basketball</span><b>NBA</b></div></a><a class="cat" href="/shop/?league=NHL"><i>🏒</i><div><span>Hockey</span><b>NHL</b></div></a></div></div></section>
-    <section class="section" style="padding-top:10px"><div class="wrap"><div class="head"><div><div class="eyebrow">Fresh from the shelf</div><h2>Stuff worth keeping.</h2></div><p>No endless warehouse dump. Just collectible pieces, clear pricing, and the details you actually care about.</p></div><div class="grid" data-featured></div></div></section>
-    <section class="section"><div class="wrap aboutBox"><div class="aboutVisual"><div class="lockerTag">EST. BY A FAN</div><strong>Small shop.<br>Big opinions.<br>Better shelf.</strong></div><div class="copy"><div class="eyebrow">The LammaJammer idea</div><h2 class="pageTitle">Collector energy without the corporate nonsense.</h2><p>LammaJammer Collectibles is a one-shop setup for sports fans who want memorable pieces without digging through a thousand junk listings. New products are added through a private dashboard, organized automatically, and published directly to the store.</p><a class="btn" href="/shop/">See what’s in stock</a></div></div></section>
+
+    <!-- HERO -->
+    <section class="wrap hero">
+
+      <div class="heroCopy">
+
+        <div class="kicker">
+          Built for real fans, not algorithms
+        </div>
+
+        <h1>
+          Your fan cave has standards.
+        </h1>
+
+        <p>
+          Rings, jerseys, memorabilia and oddball sports finds for people
+          who still remember the score, the season, and exactly why the refs
+          were wrong.
+        </p>
+
+        <div class="actions">
+
+          <a class="btn" href="/shop/">
+            Shop the good stuff
+          </a>
+
+          <a class="btn secondary" href="/about/">
+            Meet LammaJammer
+          </a>
+
+        </div>
+
+        <div class="trust">
+
+          <b>Independent seller</b>
+
+          <span>Direct secure checkout</span>
+
+          <span>Collector-first listings</span>
+
+        </div>
+
+      </div>
+
+
+      <div class="heroArt">
+
+        <div class="scoreStripe">
+          New England attitude · National fan problems
+        </div>
+
+        <div class="jerseyNum">
+          617
+        </div>
+
+        <img
+          class="heroCircleLogo"
+          src="/assets/LJ-logo-circle.png"
+          alt="LammaJammer Collectibles LJ badge"
+        >
+
+        <div class="heroLabel">
+
+          <small>
+            LammaJammer rule #1
+          </small>
+
+          If it belongs in the fan cave, it belongs here.
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- CATEGORY BAND -->
+    <div class="band">
+      MLB · NFL · NBA · NHL · CHAMPIONSHIP RINGS · JERSEYS · FAN-CAVE FINDS
+    </div>
+
+
+    <!-- LEAGUES -->
+    <section class="section">
+
+      <div class="wrap">
+
+        <div class="head">
+
+          <div>
+
+            <div class="eyebrow">
+              Pick your poison
+            </div>
+
+            <h2>
+              Start with the league.
+            </h2>
+
+          </div>
+
+          <p>
+            Team loyalty first. Product type second. Because nobody wakes up
+            thinking, “I need a generic collectible.” They wake up thinking,
+            “I need one more thing with my team on it.”
+          </p>
+
+        </div>
+
+
+        <div class="categories">
+
+          <a class="cat" href="/shop/?league=MLB">
+
+            <i>⚾</i>
+
+            <div>
+              <span>Baseball</span>
+              <b>MLB</b>
+            </div>
+
+          </a>
+
+
+          <a class="cat" href="/shop/?league=NFL">
+
+            <i>🏈</i>
+
+            <div>
+              <span>Football</span>
+              <b>NFL</b>
+            </div>
+
+          </a>
+
+
+          <a class="cat" href="/shop/?league=NBA">
+
+            <i>🏀</i>
+
+            <div>
+              <span>Basketball</span>
+              <b>NBA</b>
+            </div>
+
+          </a>
+
+
+          <a class="cat" href="/shop/?league=NHL">
+
+            <i>🏒</i>
+
+            <div>
+              <span>Hockey</span>
+              <b>NHL</b>
+            </div>
+
+          </a>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- FEATURED PRODUCTS -->
+    <section class="section productsSection">
+
+      <div class="wrap">
+
+        <div class="head">
+
+          <div>
+
+            <div class="eyebrow">
+              Fresh from the shelf
+            </div>
+
+            <h2>
+              Stuff worth keeping.
+            </h2>
+
+          </div>
+
+          <p>
+            No endless warehouse dump. Just collectible pieces, clear pricing,
+            and the details you actually care about.
+          </p>
+
+        </div>
+
+        <div class="grid" data-featured></div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ABOUT -->
+    <section class="section">
+
+      <div class="wrap aboutBox">
+
+        <div class="aboutVisual">
+
+          <div class="lockerTag">
+            EST. BY A FAN
+          </div>
+
+          <img
+            class="aboutCircleLogo"
+            src="/assets/LJ-logo-circle.png"
+            alt=""
+          >
+
+          <strong>
+            Small shop.<br>
+            Big opinions.<br>
+            Better shelf.
+          </strong>
+
+        </div>
+
+
+        <div class="copy">
+
+          <div class="eyebrow">
+            The LammaJammer idea
+          </div>
+
+          <h2 class="pageTitle">
+            Collector energy without the corporate nonsense.
+          </h2>
+
+          <p>
+            LammaJammer Collectibles is built for sports fans who want memorable
+            pieces without digging through a thousand junk listings.
+          </p>
+
+          <p>
+            Championship-style rings, jerseys, memorabilia and fan-cave finds
+            are organized into one straightforward store with clear product
+            details and direct checkout.
+          </p>
+
+          <a class="btn" href="/shop/">
+            See what’s in stock
+          </a>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
   </main>
-  <footer><div class="wrap"><div class="footerGrid"><div><h4>LammaJammer Collectibles</h4><p>Independent sports collectibles with a little New England edge.</p></div><div><h4>Shop</h4><a href="/shop/">All products</a><a href="/shop/#rings">Championship rings</a><a href="/shop/#jerseys">Jerseys</a></div><div><h4>Help</h4><a href="/policies/shipping/">Shipping</a><a href="/policies/returns/">Returns</a><a href="/policies/privacy/">Privacy</a><a href="/policies/terms/">Terms</a></div></div><div class="legal">LammaJammer Collectibles is an independent retailer. Team names, league names and trademarks belong to their respective owners. Product listings must accurately state whether an item is licensed, replica, vintage, used or otherwise.</div></div></footer>
+
+
+  <footer>
+
+    <div class="wrap">
+
+      <div class="footerGrid">
+
+        <div class="footerBrand">
+
+          <img
+            src="/assets/LJ-logo-horizontal.png"
+            class="footerLogo"
+            alt="LammaJammer Collectibles"
+          >
+
+          <p>
+            Independent sports collectibles with a little New England edge.
+          </p>
+
+        </div>
+
+
+        <div>
+
+          <h4>Shop</h4>
+
+          <a href="/shop/">
+            All products
+          </a>
+
+          <a href="/shop/#rings">
+            Championship rings
+          </a>
+
+          <a href="/shop/#jerseys">
+            Jerseys
+          </a>
+
+        </div>
+
+
+        <div>
+
+          <h4>Help</h4>
+
+          <a href="/policies/shipping/">
+            Shipping
+          </a>
+
+          <a href="/policies/returns/">
+            Returns
+          </a>
+
+          <a href="/policies/privacy/">
+            Privacy
+          </a>
+
+          <a href="/policies/terms/">
+            Terms
+          </a>
+
+        </div>
+
+      </div>
+
+
+      <div class="legal">
+
+        LammaJammer Collectibles is an independent retailer.
+
+        Team names, league names and trademarks belong to their respective owners.
+
+        Product listings should accurately state whether an item is licensed,
+        replica, vintage, used or otherwise.
+
+      </div>
+
+    </div>
+
+  </footer>
+
+
   <script src="/assets/app.js"></script>
+
 </body>
 </html>
