@@ -54,7 +54,11 @@ async function renderFeatured(){
   const el = document.querySelector('[data-featured]');
   if(!el) return;
   const ps = (await loadProducts()).filter(p => p.status === 'live' && p.featured);
-  el.innerHTML = ps.map(card).join('') || '<p class="small">Products will appear here when published.</p>';
+  el.innerHTML = ps.map(card).join('') || `
+    <div class="panel" style="grid-column:1/-1">
+      <b>No featured products yet.</b>
+      <p class="small">Real products will appear here after inventory is imported or published.</p>
+    </div>`;
 }
 
 async function renderShop(){
@@ -62,7 +66,11 @@ async function renderShop(){
   if(!el) return;
 
   const ps = (await loadProducts()).filter(p => ['live','sold'].includes(p.status));
-  el.innerHTML = ps.map(card).join('');
+  el.innerHTML = ps.map(card).join('') || `
+    <div class="panel" style="grid-column:1/-1">
+      <b>No products are live yet.</b>
+      <p class="small">The storefront is ready. Current inventory will populate here once imported or published.</p>
+    </div>`;
 
   document.querySelectorAll('[data-filter]').forEach(b => b.addEventListener('click', () => {
     document.querySelectorAll('[data-filter]').forEach(x => x.classList.remove('active'));
