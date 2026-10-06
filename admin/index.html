@@ -10,14 +10,6 @@
     .auth-wrap{max-width:560px;margin:70px auto}
     .auth-row{display:flex;gap:10px}
     .auth-row .input{flex:1}
-    .password-wrap{position:relative;flex:1}
-    .password-wrap .input{width:100%;padding-right:58px}
-    .password-eye{
-      position:absolute;right:12px;top:50%;transform:translateY(-50%);
-      width:40px;height:40px;border:0;border-radius:10px;cursor:pointer;
-      background:transparent;color:#d7e0ea;font-size:20px;display:grid;place-items:center
-    }
-    .password-eye:hover{background:rgba(255,255,255,.06)}
     .admin-shell{display:grid;grid-template-columns:210px 1fr;gap:20px}
     .admin-side{position:sticky;top:110px;height:max-content}
     .admin-side img{width:150px;margin:0 auto 18px}
@@ -64,10 +56,7 @@
       <h3>Dad's dashboard</h3>
       <p class="small">Enter the private admin password.</p>
       <form id="loginForm" class="auth-row">
-        <div class="password-wrap">
-          <input class="input" id="password" type="password" autocomplete="current-password" placeholder="Admin password" required>
-          <button class="password-eye" id="togglePassword" type="button" aria-label="Show password" title="Show password">👁</button>
-        </div>
+        <input class="input" id="password" type="password" autocomplete="current-password" placeholder="Admin password" required>
         <button class="btn" type="submit">Enter</button>
       </form>
       <div id="loginStatus" class="small" style="margin-top:12px"></div>
@@ -82,13 +71,14 @@
           <button class="chip" data-section-btn="add">+ Add product</button>
           <button class="chip" data-section-btn="inventory">Inventory</button>
           <button class="chip" data-section-btn="promotion">Promotion</button>
+          <button class="chip" data-section-btn="orders">Orders</button>
           <a class="chip" style="display:block;margin-top:14px" href="/" target="_blank">View storefront ↗</a>
           <button class="chip" id="logoutBtn" type="button" style="margin-top:14px">Log out</button>
         </aside>
 
         <div>
           <div class="preview-note">
-            <b>Preview mode:</b> tonight's dashboard shows the intended hands-free workflow and sample inventory. Product publishing is being connected to Make/Google/Stripe next.
+            <b>Setup status:</b> dashboard structure is live. Product publishing, Google/Make automation, Stripe orders and promotion connections are still being connected.
           </div>
 
           <section id="overviewSection">
@@ -101,32 +91,41 @@
               <div class="stat"><b id="liveCount">—</b><span>Live products</span></div>
               <div class="stat"><b id="preCount">—</b><span>Pre-active</span></div>
               <div class="stat"><b id="soldCount">—</b><span>Sold</span></div>
-              <div class="stat"><b id="revenue">$0</b><span>Revenue demo</span></div>
+              <div class="stat"><b id="revenue">$0.00</b><span>Revenue</span></div>
             </div>
 
             <div class="section" style="padding:24px 0 0">
               <div class="panel">
-                <div class="row"><div><div class="eyebrow">Hands-free promotion</div><h2 style="font:700 30px Georgia;margin:8px 0">What happens after Publish</h2></div><span class="promo-pill promo-active">AUTOMATIC</span></div>
+                <div class="row">
+                  <div>
+                    <div class="eyebrow">Hands-free workflow</div>
+                    <h2 style="font:700 30px Georgia;margin:8px 0">How publishing will work</h2>
+                  </div>
+                  <span class="promo-pill promo-queued">BEING CONNECTED</span>
+                </div>
                 <div class="pipeline">
-                  <div class="pipe"><b>1. Listing cleanup</b><span class="ok">Automatic</span><span>Title, description, category, SEO and photo ranking.</span></div>
-                  <div class="pipe"><b>2. Store goes live</b><span class="ok">Automatic</span><span>Product appears in the right league/category and inventory.</span></div>
-                  <div class="pipe"><b>3. Launch image</b><span class="wait">Queued</span><span>Brand-correct static post from the real product photo.</span></div>
-                  <div class="pipe"><b>4. Reel + carousel</b><span class="wait">Scheduled</span><span>Portrait reel + follow-up carousel if the item is still available.</span></div>
-                  <div class="pipe"><b>5. Sale stops promo</b><span class="ok">Automatic</span><span>Stripe sale updates quantity and cancels remaining promotion.</span></div>
+                  <div class="pipe"><b>1. Add product</b><span class="wait">Dashboard ready</span><span>Upload real photos, rough title, price, quantity, shipping and optional promo budget.</span></div>
+                  <div class="pipe"><b>2. Listing cleanup</b><span class="wait">Connection pending</span><span>Title, description, category and SEO are cleaned without inventing product facts.</span></div>
+                  <div class="pipe"><b>3. Publish + inventory</b><span class="wait">Connection pending</span><span>The product goes live and inventory becomes the source of truth for availability.</span></div>
+                  <div class="pipe"><b>4. Promotion</b><span class="wait">Connection pending</span><span>Organic launch image, reel and carousel are generated from the real listing assets.</span></div>
+                  <div class="pipe"><b>5. Sale + fulfillment</b><span class="wait">Connection pending</span><span>Stripe records the order, inventory updates, remaining promotion stops and shipping moves into Orders.</span></div>
                 </div>
               </div>
             </div>
 
             <div class="section" style="padding:20px 0 0">
               <div class="panel">
-                <div class="eyebrow">Snapshot</div>
-                <h2 style="font:700 28px Georgia;margin:8px 0 16px">What Dad will see at a glance</h2>
+                <div class="eyebrow">Performance</div>
+                <h2 style="font:700 28px Georgia;margin:8px 0 6px">Store activity</h2>
+                <p class="small" style="margin:0 0 16px">These stay at zero until real products, traffic, promotion and orders are connected.</p>
                 <div class="data-grid">
-                  <div class="data-card"><b id="viewsTotal">—</b><span>Product views</span></div>
-                  <div class="data-card"><b id="clicksTotal">—</b><span>Store clicks</span></div>
-                  <div class="data-card"><b id="promoSpend">$—</b><span>Promo spend</span></div>
+                  <div class="data-card"><b id="viewsTotal">0</b><span>Product views</span></div>
+                  <div class="data-card"><b id="clicksTotal">0</b><span>Store clicks</span></div>
+                  <div class="data-card"><b id="promoSpend">$0.00</b><span>Promo spend</span></div>
                   <div class="data-card"><b id="avgDays">—</b><span>Avg. days live</span></div>
                 </div>
+              </div>
+            </div>
               </div>
             </div>
           </section>
@@ -160,7 +159,7 @@
           </section>
 
           <section id="inventorySection" class="hidden-section">
-            <div class="head"><div><div class="eyebrow">Inventory</div><h1 class="pageTitle">Everything in one place.</h1></div></div>
+            <div class="head"><div><div class="eyebrow">Inventory</div><h1 class="pageTitle">Inventory.</h1></div></div>
             <div class="admin-tabs">
               <button class="chip active" data-inv-filter="all">All</button>
               <button class="chip" data-inv-filter="live">Live</button>
@@ -171,10 +170,25 @@
           </section>
 
           <section id="promotionSection" class="hidden-section">
-            <div class="head"><div><div class="eyebrow">Promotion</div><h1 class="pageTitle">Hands-free by default.</h1></div></div>
+            <div class="head"><div><div class="eyebrow">Promotion</div><h1 class="pageTitle">Promotion pipeline.</h1></div></div>
             <div class="panel">
-              <p class="small">Every live product gets free organic promotion. Paid budget is optional and always capped by Dad.</p>
+              <p class="small">Organic promotion is the default plan. Paid promotion will remain optional and capped by the budget you enter for each product.</p>
               <div id="promoRows" class="product-list"></div>
+            </div>
+          </section>
+
+          <section id="ordersSection" class="hidden-section">
+            <div class="head">
+              <div>
+                <div class="eyebrow">Orders + fulfillment</div>
+                <h1 class="pageTitle">Orders.</h1>
+              </div>
+            </div>
+            <div class="panel">
+              <div id="ordersEmpty">
+                <h3 style="margin-top:0">No orders yet.</h3>
+                <p class="small">When Stripe is connected, paid orders will appear here with customer shipping information, fulfillment status and tracking.</p>
+              </div>
             </div>
           </section>
 
@@ -232,6 +246,10 @@ function renderEverything(){
 function renderInventory(filter){
   const root=document.getElementById('productRows');
   const ps=PRODUCTS.filter(p=>filter==='all'||p.status===filter);
+  if(!ps.length){
+    root.innerHTML = `<div class="panel"><b>No ${filter==='all'?'products':filter+' products'} yet.</b><div class="mini" style="margin-top:8px">Real inventory will appear here after products are imported or published.</div></div>`;
+    return;
+  }
   root.innerHTML = `
     <div class="product-row headrow"><div>Product</div><div>Price</div><div>Qty</div><div>Status</div><div>Views</div><div>Promo</div></div>
     ${ps.map(p=>`
@@ -241,28 +259,32 @@ function renderInventory(filter){
         <div>${Number(p.quantity||0)}</div>
         <div>${escapeHtml(p.status)}</div>
         <div>${Number(p.views||0)}</div>
-        <div><span class="promo-pill ${p.promo_status.includes('active')?'promo-active':p.promo_status.includes('queued')||p.promo_status.includes('waiting')?'promo-queued':'promo-stopped'}">${escapeHtml(p.promo_status)}</span></div>
+        <div><span class="promo-pill ${String(p.promo_status||'').includes('active')?'promo-active':String(p.promo_status||'').includes('queued')||String(p.promo_status||'').includes('waiting')?'promo-queued':'promo-stopped'}">${escapeHtml(p.promo_status||'not started')}</span></div>
       </div>`).join('')}
   `;
 }
 
 function renderPromo(){
   const root=document.getElementById('promoRows');
+  if(!PRODUCTS.length){
+    root.innerHTML = `<div class="notice"><b>No promotions running.</b><br>Promotion records will appear here after real products are published and the Make/social pipeline is connected.</div>`;
+    return;
+  }
   root.innerHTML = PRODUCTS.map(p=>`
     <div class="product-row">
-      <div><strong>${escapeHtml(p.title)}</strong><div class="mini">Static → Reel → Carousel</div></div>
+      <div><strong>${escapeHtml(p.title)}</strong><div class="mini">Launch image → Reel → Carousel</div></div>
       <div>${money(p.promo_budget_total)} budget</div>
       <div>${money(p.promo_budget_spent)} spent</div>
       <div>${Number(p.clicks||0)} clicks</div>
       <div>${Number(p.sales||0)} sales</div>
-      <div><span class="promo-pill ${p.promo_status.includes('active')?'promo-active':p.promo_status.includes('queued')||p.promo_status.includes('waiting')?'promo-queued':'promo-stopped'}">${escapeHtml(p.promo_status)}</span></div>
+      <div><span class="promo-pill ${String(p.promo_status||'').includes('active')?'promo-active':String(p.promo_status||'').includes('queued')||String(p.promo_status||'').includes('waiting')?'promo-queued':'promo-stopped'}">${escapeHtml(p.promo_status||'not started')}</span></div>
     </div>`).join('');
 }
 
 document.querySelectorAll('[data-section-btn]').forEach(btn=>btn.onclick=()=>showSection(btn.dataset.sectionBtn));
 document.querySelectorAll('[data-go-add]').forEach(btn=>btn.onclick=()=>showSection('add'));
 function showSection(name){
-  ['overview','add','inventory','promotion'].forEach(n=>document.getElementById(n+'Section').classList.toggle('hidden-section',n!==name));
+  ['overview','add','inventory','promotion','orders'].forEach(n=>document.getElementById(n+'Section').classList.toggle('hidden-section',n!==name));
   document.querySelectorAll('[data-section-btn]').forEach(b=>b.classList.toggle('active',b.dataset.sectionBtn===name));
 }
 
@@ -272,40 +294,15 @@ document.querySelectorAll('[data-inv-filter]').forEach(btn=>btn.onclick=()=>{
   renderInventory(btn.dataset.invFilter);
 });
 
-document.getElementById('togglePassword').addEventListener('click',()=>{
-  const input=document.getElementById('password');
-  const btn=document.getElementById('togglePassword');
-  const showing=input.type==='text';
-  input.type=showing?'password':'text';
-  btn.textContent=showing?'👁':'🙈';
-  btn.setAttribute('aria-label',showing?'Show password':'Hide password');
-  btn.title=showing?'Show password':'Hide password';
-});
-
 document.getElementById('loginForm').addEventListener('submit', async e=>{
   e.preventDefault();
   const status=document.getElementById('loginStatus');
   status.textContent='Signing in…';
-  try{
-    const r=await api('/api/login',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({password:document.getElementById('password').value.trim()})
-    });
-    let body={};
-    try{ body=await r.json(); }catch(_){}
-    if(!r.ok){
-      status.textContent=body.error || ('Login failed ('+r.status+').');
-      return;
-    }
-    status.textContent='';
-    document.getElementById('password').value='';
-    document.getElementById('password').type='password';
-    document.getElementById('togglePassword').textContent='👁';
-    checkSession();
-  }catch(err){
-    status.textContent='Could not reach the login API.';
-  }
+  const r=await api('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:document.getElementById('password').value})});
+  if(!r.ok){status.textContent='Wrong password or login not configured yet.';return}
+  status.textContent='';
+  document.getElementById('password').value='';
+  checkSession();
 });
 
 document.getElementById('logoutBtn').onclick=async()=>{await api('/api/logout',{method:'POST'});location.reload()};
@@ -331,7 +328,7 @@ document.getElementById('productForm').addEventListener('submit', async e=>{
     images
   };
   const r=await api('/api/publish-product',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-  if(!r.ok){s.textContent='Pipeline is not fully connected yet — form layout is ready.';return}
+  if(!r.ok){s.textContent='Publishing connection is not live yet. Nothing was published.';return}
   s.textContent='Sent to product pipeline successfully.';
 });
 
