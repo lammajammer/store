@@ -10,6 +10,14 @@
     .auth-wrap{max-width:560px;margin:70px auto}
     .auth-row{display:flex;gap:10px}
     .auth-row .input{flex:1}
+    .password-wrap{position:relative;flex:1}
+    .password-wrap .input{width:100%;padding-right:58px}
+    .password-eye{
+      position:absolute;right:12px;top:50%;transform:translateY(-50%);
+      width:40px;height:40px;border:0;border-radius:10px;cursor:pointer;
+      background:transparent;color:#d7e0ea;font-size:20px;display:grid;place-items:center
+    }
+    .password-eye:hover{background:rgba(255,255,255,.06)}
     .admin-shell{display:grid;grid-template-columns:210px 1fr;gap:20px}
     .admin-side{position:sticky;top:110px;height:max-content}
     .admin-side img{width:150px;margin:0 auto 18px}
@@ -56,7 +64,10 @@
       <h3>Dad's dashboard</h3>
       <p class="small">Enter the private admin password.</p>
       <form id="loginForm" class="auth-row">
-        <input class="input" id="password" type="password" autocomplete="current-password" placeholder="Admin password" required>
+        <div class="password-wrap">
+          <input class="input" id="password" type="password" autocomplete="current-password" placeholder="Admin password" required>
+          <button class="password-eye" id="togglePassword" type="button" aria-label="Show password" title="Show password">👁</button>
+        </div>
         <button class="btn" type="submit">Enter</button>
       </form>
       <div id="loginStatus" class="small" style="margin-top:12px"></div>
@@ -261,15 +272,40 @@ document.querySelectorAll('[data-inv-filter]').forEach(btn=>btn.onclick=()=>{
   renderInventory(btn.dataset.invFilter);
 });
 
+document.getElementById('togglePassword').addEventListener('click',()=>{
+  const input=document.getElementById('password');
+  const btn=document.getElementById('togglePassword');
+  const showing=input.type==='text';
+  input.type=showing?'password':'text';
+  btn.textContent=showing?'👁':'🙈';
+  btn.setAttribute('aria-label',showing?'Show password':'Hide password');
+  btn.title=showing?'Show password':'Hide password';
+});
+
 document.getElementById('loginForm').addEventListener('submit', async e=>{
   e.preventDefault();
   const status=document.getElementById('loginStatus');
   status.textContent='Signing in…';
-  const r=await api('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:document.getElementById('password').value})});
-  if(!r.ok){status.textContent='Wrong password or login not configured yet.';return}
-  status.textContent='';
-  document.getElementById('password').value='';
-  checkSession();
+  try{
+    const r=await api('/api/login',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({password:document.getElementById('password').value.trim()})
+    });
+    let body={};
+    try{ body=await r.json(); }catch(_){}
+    if(!r.ok){
+      status.textContent=body.error || ('Login failed ('+r.status+').');
+      return;
+    }
+    status.textContent='';
+    document.getElementById('password').value='';
+    document.getElementById('password').type='password';
+    document.getElementById('togglePassword').textContent='👁';
+    checkSession();
+  }catch(err){
+    status.textContent='Could not reach the login API.';
+  }
 });
 
 document.getElementById('logoutBtn').onclick=async()=>{await api('/api/logout',{method:'POST'});location.reload()};
