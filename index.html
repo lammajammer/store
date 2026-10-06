@@ -2,395 +2,1167 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-
-  <title>LammaJammer Collectibles | Sports Memorabilia & Fan Favorites</title>
-
-  <meta
-    name="description"
-    content="Sports collectibles, championship-style rings, jerseys and fan-cave finds with New England attitude."
-  >
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#07111f">
+  <title>LammaJammer OS</title>
 
   <link rel="icon" type="image/png" href="/assets/LJ-logo-circle.png">
   <link rel="apple-touch-icon" href="/assets/LJ-logo-circle.png">
-
   <link rel="stylesheet" href="/assets/styles.css">
+
+  <style>
+    :root{
+      --admin-sidebar:228px;
+      --admin-gap:22px;
+    }
+
+    body{
+      min-height:100vh;
+      padding-bottom:0;
+    }
+
+    .admin-main{
+      padding:24px 0 70px;
+    }
+
+    /* LOGIN */
+    .auth-wrap{
+      width:min(620px,calc(100% - 24px));
+      margin:52px auto;
+      padding:32px;
+    }
+
+    .auth-logo{
+      width:min(350px,90%);
+      margin:0 auto 24px;
+    }
+
+    .auth-row{
+      display:flex;
+      gap:10px;
+    }
+
+    .password-wrap{
+      position:relative;
+      flex:1;
+    }
+
+    .password-wrap .input{
+      width:100%;
+      padding-right:58px;
+    }
+
+    .password-eye{
+      position:absolute;
+      right:8px;
+      top:50%;
+      transform:translateY(-50%);
+      width:42px;
+      height:42px;
+      border:0;
+      border-radius:10px;
+      cursor:pointer;
+      background:transparent;
+      color:#eef3f8;
+      font-size:20px;
+    }
+
+    .password-eye:hover{
+      background:rgba(255,255,255,.06);
+    }
+
+    /* APP SHELL */
+    .admin-shell{
+      display:grid;
+      grid-template-columns:var(--admin-sidebar) minmax(0,1fr);
+      gap:var(--admin-gap);
+      align-items:start;
+    }
+
+    .admin-side{
+      position:sticky;
+      top:18px;
+      padding:17px;
+      border:1px solid var(--line);
+      border-radius:24px;
+      background:#091827;
+    }
+
+    .side-logo{
+      width:148px;
+      margin:2px auto 18px;
+    }
+
+    .admin-nav{
+      display:grid;
+      gap:8px;
+    }
+
+    .admin-nav button,
+    .admin-nav a{
+      width:100%;
+      min-height:44px;
+      display:flex;
+      align-items:center;
+      justify-content:flex-start;
+      padding:10px 14px;
+      border:1px solid #315270;
+      border-radius:999px;
+      background:transparent;
+      color:#dce5ee;
+      font:inherit;
+      font-size:13px;
+      cursor:pointer;
+      text-decoration:none;
+      transition:.18s ease;
+    }
+
+    .admin-nav button:hover,
+    .admin-nav a:hover{
+      background:#0e2337;
+      border-color:#5c7894;
+    }
+
+    .admin-nav button.active{
+      background:#941823;
+      border-color:#d22b38;
+      color:white;
+    }
+
+    .admin-nav .nav-spacer{
+      height:4px;
+    }
+
+    .admin-content{
+      min-width:0;
+    }
+
+    .setup-note{
+      background:#12263a;
+      border:1px solid #3e6180;
+      border-radius:14px;
+      padding:11px 14px;
+      color:#b8c6d3;
+      font-size:11px;
+      line-height:1.55;
+      margin-bottom:20px;
+    }
+
+    .section-header{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:16px;
+      margin-bottom:20px;
+    }
+
+    .section-header .pageTitle{
+      margin-top:7px;
+    }
+
+    /* OVERVIEW */
+    .statGrid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+    }
+
+    .pipeline-panel,
+    .activity-panel{
+      margin-top:18px;
+    }
+
+    .pipeline-heading{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:14px;
+      margin-bottom:15px;
+    }
+
+    .pipeline-heading h2,
+    .panel-title{
+      font:700 29px/1.05 Georgia,serif;
+      margin:7px 0 0;
+    }
+
+    .pipeline{
+      display:grid;
+      grid-template-columns:repeat(5,minmax(0,1fr));
+      gap:10px;
+    }
+
+    .pipe{
+      padding:15px;
+      min-height:145px;
+      border:1px solid var(--line);
+      border-radius:15px;
+      background:#071421;
+    }
+
+    .pipe b{
+      display:block;
+      margin-bottom:8px;
+      line-height:1.2;
+    }
+
+    .pipe span{
+      display:block;
+      margin-bottom:5px;
+      color:#91a2b2;
+      font-size:11px;
+      line-height:1.5;
+    }
+
+    .pipe .ready{ color:#6fd09a; }
+    .pipe .pending{ color:#efb55f; }
+
+    .data-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:10px;
+      margin-top:14px;
+    }
+
+    .data-card{
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:15px;
+      background:#071421;
+    }
+
+    .data-card b{
+      display:block;
+      font:700 26px Georgia,serif;
+      color:var(--cream);
+    }
+
+    .data-card span{
+      display:block;
+      margin-top:3px;
+      color:#8fa2b4;
+      font-size:9px;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+    }
+
+    /* ADD PRODUCT */
+    .product-form{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:15px;
+    }
+
+    .product-form .full{
+      grid-column:1 / -1;
+    }
+
+    .upload-box{
+      border:1px dashed #456784;
+      border-radius:16px;
+      padding:17px;
+      background:#071421;
+    }
+
+    .form-note{
+      margin:7px 0 0;
+      color:#7f93a6;
+      font-size:10px;
+      line-height:1.55;
+    }
+
+    /* INVENTORY + PROMO */
+    .filter-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-bottom:14px;
+    }
+
+    .records{
+      display:grid;
+      gap:10px;
+    }
+
+    .record-head,
+    .record{
+      display:grid;
+      grid-template-columns:minmax(220px,1.6fr) .65fr .45fr .65fr .55fr .9fr;
+      gap:10px;
+      align-items:center;
+    }
+
+    .record-head{
+      padding:0 12px 4px;
+      color:#8fa2b4;
+      font-size:9px;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+    }
+
+    .record{
+      padding:13px;
+      border:1px solid var(--line);
+      border-radius:14px;
+      background:#071421;
+    }
+
+    .record strong{
+      font-family:Georgia,serif;
+      line-height:1.2;
+    }
+
+    .record .mini{
+      margin-top:4px;
+      color:#7f93a6;
+      font-size:10px;
+    }
+
+    .promo-pill{
+      display:inline-flex;
+      width:max-content;
+      max-width:100%;
+      border:1px solid #506a82;
+      border-radius:999px;
+      padding:5px 8px;
+      color:#9fb0bf;
+      font-size:9px;
+    }
+
+    .empty-state{
+      padding:24px;
+      border:1px solid var(--line);
+      border-radius:16px;
+      background:#0a1828;
+    }
+
+    .empty-state h3{
+      margin:0 0 7px;
+      font:700 22px Georgia,serif;
+    }
+
+    .hidden-section{
+      display:none !important;
+    }
+
+    /* MOBILE NAV - hidden on desktop */
+    .mobile-bar{
+      display:none;
+    }
+
+    /* TABLET */
+    @media (max-width:1050px){
+      :root{
+        --admin-sidebar:190px;
+        --admin-gap:16px;
+      }
+
+      .side-logo{
+        width:125px;
+      }
+
+      .statGrid,
+      .data-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+
+      .pipeline{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+
+      .pipe:last-child{
+        grid-column:1 / -1;
+      }
+
+      .record-head{
+        display:none;
+      }
+
+      .record{
+        grid-template-columns:1.5fr .7fr .55fr;
+      }
+
+      .record > *:nth-child(n+4){
+        margin-top:2px;
+      }
+    }
+
+    /* PHONE + SMALL TABLET */
+    @media (max-width:760px){
+      body{
+        padding-bottom:78px;
+      }
+
+      .admin-main{
+        padding:12px 0 34px;
+      }
+
+      .wrap{
+        width:min(calc(100% - 20px),1180px);
+      }
+
+      .admin-shell{
+        display:block;
+      }
+
+      .admin-side{
+        position:static;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        padding:10px 12px;
+        border-radius:18px;
+        margin-bottom:12px;
+      }
+
+      .side-logo{
+        width:72px;
+        margin:0;
+      }
+
+      .admin-side .admin-nav{
+        display:none;
+      }
+
+      .admin-content{
+        width:100%;
+      }
+
+      .setup-note{
+        margin-bottom:14px;
+        font-size:10px;
+      }
+
+      .section-header{
+        align-items:center;
+        margin-bottom:15px;
+      }
+
+      .section-header .eyebrow{
+        font-size:9px;
+      }
+
+      .section-header .pageTitle{
+        font-size:40px;
+        margin-top:5px;
+      }
+
+      .section-header .btn{
+        flex:0 0 auto;
+        padding:11px 14px;
+        font-size:11px;
+      }
+
+      .statGrid,
+      .data-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:8px;
+      }
+
+      .stat{
+        padding:14px;
+      }
+
+      .stat b{
+        font-size:24px;
+      }
+
+      .pipeline-panel,
+      .activity-panel{
+        margin-top:12px;
+      }
+
+      .panel{
+        padding:17px;
+        border-radius:18px;
+      }
+
+      .pipeline-heading{
+        display:block;
+      }
+
+      .pipeline-heading .promo-pill{
+        margin-top:10px;
+      }
+
+      .pipeline-heading h2,
+      .panel-title{
+        font-size:25px;
+      }
+
+      .pipeline{
+        display:flex;
+        overflow-x:auto;
+        scroll-snap-type:x mandatory;
+        gap:10px;
+        padding-bottom:4px;
+        -webkit-overflow-scrolling:touch;
+      }
+
+      .pipe{
+        flex:0 0 82%;
+        min-height:150px;
+        scroll-snap-align:start;
+      }
+
+      .product-form{
+        grid-template-columns:1fr;
+        gap:12px;
+      }
+
+      .product-form .full{
+        grid-column:auto;
+      }
+
+      .input,
+      .select,
+      .textarea{
+        min-height:48px;
+        font-size:16px; /* prevents iOS auto zoom */
+      }
+
+      .textarea{
+        min-height:120px;
+      }
+
+      input[type="file"]{
+        width:100%;
+        min-height:50px;
+        padding:9px;
+      }
+
+      .record{
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:9px;
+      }
+
+      .record > div:first-child{
+        grid-column:1 / -1;
+      }
+
+      .auth-wrap{
+        margin:24px auto;
+        padding:22px;
+      }
+
+      .auth-logo{
+        width:260px;
+      }
+
+      .auth-row{
+        display:block;
+      }
+
+      .auth-row > .btn{
+        width:100%;
+        margin-top:10px;
+        min-height:48px;
+      }
+
+      .mobile-bar{
+        position:fixed;
+        left:0;
+        right:0;
+        bottom:0;
+        z-index:90;
+        display:grid;
+        grid-template-columns:repeat(5,1fr);
+        gap:4px;
+        padding:8px max(8px,env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));
+        background:rgba(4,12,20,.96);
+        border-top:1px solid #29435f;
+        backdrop-filter:blur(18px);
+      }
+
+      .mobile-bar button{
+        min-width:0;
+        min-height:50px;
+        padding:5px 3px;
+        border:0;
+        border-radius:12px;
+        background:transparent;
+        color:#91a2b2;
+        font-size:10px;
+        font-weight:800;
+        cursor:pointer;
+      }
+
+      .mobile-bar button span{
+        display:block;
+        margin-bottom:2px;
+        font-size:18px;
+        line-height:1;
+      }
+
+      .mobile-bar button.active{
+        background:#941823;
+        color:white;
+      }
+    }
+
+    @media (max-width:420px){
+      .section-header .pageTitle{
+        font-size:35px;
+      }
+
+      .statGrid,
+      .data-grid{
+        grid-template-columns:1fr 1fr;
+      }
+
+      .stat b,
+      .data-card b{
+        font-size:22px;
+      }
+
+      .record{
+        grid-template-columns:1fr;
+      }
+
+      .record > div:first-child{
+        grid-column:auto;
+      }
+
+      .pipe{
+        flex-basis:90%;
+      }
+    }
+  </style>
 </head>
 
 <body>
+  <div class="topline">LammaJammer OS · Private Admin</div>
 
-  <div class="topline">
-    Independent collector shop · No bandwagon required
-  </div>
-
-  <header>
-    <div class="wrap nav">
-
-      <a class="brand" href="/" aria-label="LammaJammer Collectibles home">
-        <img
-          src="/assets/LJ-logo-horizontal.png"
-          class="brandLogoHorizontal"
-          alt="LammaJammer Collectibles"
-        >
-      </a>
-
-      <nav class="navlinks">
-        <a href="/shop/">Shop</a>
-        <a href="/about/">Our Story</a>
-        <a href="/faq/">FAQ</a>
-
-        <a class="btn" href="/shop/">
-          Raid the collection
-        </a>
-      </nav>
-
-    </div>
-  </header>
-
-
-  <main>
-
-    <!-- HERO -->
-    <section class="wrap hero">
-
-      <div class="heroCopy">
-
-        <div class="kicker">
-          Built for real fans, not algorithms
-        </div>
-
-        <h1>
-          Your fan cave has standards.
-        </h1>
-
-        <p>
-          Rings, jerseys, memorabilia and oddball sports finds for people
-          who still remember the score, the season, and exactly why the refs
-          were wrong.
-        </p>
-
-        <div class="actions">
-
-          <a class="btn" href="/shop/">
-            Shop the good stuff
-          </a>
-
-          <a class="btn secondary" href="/about/">
-            Meet LammaJammer
-          </a>
-
-        </div>
-
-        <div class="trust">
-
-          <b>Independent seller</b>
-
-          <span>Direct secure checkout</span>
-
-          <span>Collector-first listings</span>
-
-        </div>
-
-      </div>
-
-
-      <div class="heroArt">
-
-        <div class="scoreStripe">
-          New England attitude · National fan problems
-        </div>
-
-        <div class="jerseyNum">
-          617
-        </div>
-
-        <img
-          class="heroCircleLogo"
-          src="/assets/LJ-logo-circle.png"
-          alt="LammaJammer Collectibles LJ badge"
-        >
-
-        <div class="heroLabel">
-
-          <small>
-            LammaJammer rule #1
-          </small>
-
-          If it belongs in the fan cave, it belongs here.
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- CATEGORY BAND -->
-    <div class="band">
-      MLB · NFL · NBA · NHL · CHAMPIONSHIP RINGS · JERSEYS · FAN-CAVE FINDS
-    </div>
-
-
-    <!-- LEAGUES -->
-    <section class="section">
-
-      <div class="wrap">
-
-        <div class="head">
-
-          <div>
-
-            <div class="eyebrow">
-              Pick your poison
-            </div>
-
-            <h2>
-              Start with the league.
-            </h2>
-
-          </div>
-
-          <p>
-            Team loyalty first. Product type second. Because nobody wakes up
-            thinking, “I need a generic collectible.” They wake up thinking,
-            “I need one more thing with my team on it.”
-          </p>
-
-        </div>
-
-
-        <div class="categories">
-
-          <a class="cat" href="/shop/?league=MLB">
-
-            <i>⚾</i>
-
-            <div>
-              <span>Baseball</span>
-              <b>MLB</b>
-            </div>
-
-          </a>
-
-
-          <a class="cat" href="/shop/?league=NFL">
-
-            <i>🏈</i>
-
-            <div>
-              <span>Football</span>
-              <b>NFL</b>
-            </div>
-
-          </a>
-
-
-          <a class="cat" href="/shop/?league=NBA">
-
-            <i>🏀</i>
-
-            <div>
-              <span>Basketball</span>
-              <b>NBA</b>
-            </div>
-
-          </a>
-
-
-          <a class="cat" href="/shop/?league=NHL">
-
-            <i>🏒</i>
-
-            <div>
-              <span>Hockey</span>
-              <b>NHL</b>
-            </div>
-
-          </a>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- FEATURED PRODUCTS -->
-    <section class="section productsSection">
-
-      <div class="wrap">
-
-        <div class="head">
-
-          <div>
-
-            <div class="eyebrow">
-              Fresh from the shelf
-            </div>
-
-            <h2>
-              Stuff worth keeping.
-            </h2>
-
-          </div>
-
-          <p>
-            No endless warehouse dump. Just collectible pieces, clear pricing,
-            and the details you actually care about.
-          </p>
-
-        </div>
-
-        <div class="grid" data-featured></div>
-
-      </div>
-
-    </section>
-
-
-    <!-- ABOUT -->
-    <section class="section">
-
-      <div class="wrap aboutBox">
-
-        <div class="aboutVisual">
-
-          <div class="lockerTag">
-            EST. BY A FAN
-          </div>
-
-          <img
-            class="aboutCircleLogo"
-            src="/assets/LJ-logo-circle.png"
-            alt=""
-          >
-
-          <strong>
-            Small shop.<br>
-            Big opinions.<br>
-            Better shelf.
-          </strong>
-
-        </div>
-
-
-        <div class="copy">
-
-          <div class="eyebrow">
-            The LammaJammer idea
-          </div>
-
-          <h2 class="pageTitle">
-            Collector energy without the corporate nonsense.
-          </h2>
-
-          <p>
-            LammaJammer Collectibles is built for sports fans who want memorable
-            pieces without digging through a thousand junk listings.
-          </p>
-
-          <p>
-            Championship-style rings, jerseys, memorabilia and fan-cave finds
-            are organized into one straightforward store with clear product
-            details and direct checkout.
-          </p>
-
-          <a class="btn" href="/shop/">
-            See what’s in stock
-          </a>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-  </main>
-
-
-  <footer>
-
+  <main class="admin-main">
     <div class="wrap">
 
-      <div class="footerGrid">
+      <!-- LOGIN -->
+      <section id="authPanel" class="panel auth-wrap">
+        <img class="auth-logo" src="/assets/LJ-logo-horizontal.png" alt="LammaJammer Collectibles">
+        <h2 style="margin:0 0 8px">Store dashboard</h2>
+        <p class="small" style="margin:0 0 16px">Enter the private admin password.</p>
 
-        <div class="footerBrand">
+        <form id="loginForm" class="auth-row">
+          <div class="password-wrap">
+            <input class="input" id="password" type="password" autocomplete="current-password" placeholder="Admin password" required>
+            <button class="password-eye" id="togglePassword" type="button" aria-label="Show password" title="Show password">👁</button>
+          </div>
+          <button class="btn" type="submit">Enter</button>
+        </form>
 
-          <img
-            src="/assets/LJ-logo-horizontal.png"
-            class="footerLogo"
-            alt="LammaJammer Collectibles"
-          >
+        <div id="loginStatus" class="small" style="margin-top:10px"></div>
+      </section>
 
-          <p>
-            Independent sports collectibles with a little New England edge.
-          </p>
+      <!-- ADMIN -->
+      <section id="adminApp" class="hidden">
+        <div class="admin-shell">
 
+          <aside class="admin-side">
+            <img class="side-logo" src="/assets/LJ-logo-circle.png" alt="LammaJammer Collectibles">
+
+            <nav class="admin-nav">
+              <button class="active" type="button" data-section-btn="overview">Overview</button>
+              <button type="button" data-section-btn="add">+ Add product</button>
+              <button type="button" data-section-btn="inventory">Inventory</button>
+              <button type="button" data-section-btn="promotion">Promotion</button>
+              <button type="button" data-section-btn="orders">Orders</button>
+              <div class="nav-spacer"></div>
+              <a href="/" target="_blank" rel="noopener">View storefront ↗</a>
+              <button type="button" id="logoutBtn">Log out</button>
+            </nav>
+          </aside>
+
+          <div class="admin-content">
+            <div class="setup-note">
+              <b>Setup status:</b> dashboard structure is live. Product publishing, Google/Make automation, Stripe orders and promotion connections are still being connected.
+            </div>
+
+            <!-- OVERVIEW -->
+            <section id="overviewSection">
+              <div class="section-header">
+                <div>
+                  <div class="eyebrow">Store dashboard</div>
+                  <h1 class="pageTitle">Overview.</h1>
+                </div>
+                <button class="btn" type="button" data-go-add>+ Add product</button>
+              </div>
+
+              <div class="statGrid">
+                <div class="stat"><b id="liveCount">0</b><span>Live products</span></div>
+                <div class="stat"><b id="preCount">0</b><span>Pre-active</span></div>
+                <div class="stat"><b id="soldCount">0</b><span>Sold</span></div>
+                <div class="stat"><b id="revenue">$0.00</b><span>Revenue</span></div>
+              </div>
+
+              <div class="panel pipeline-panel">
+                <div class="pipeline-heading">
+                  <div>
+                    <div class="eyebrow">Hands-free workflow</div>
+                    <h2>How publishing will work</h2>
+                  </div>
+                  <span class="promo-pill">BEING CONNECTED</span>
+                </div>
+
+                <div class="pipeline">
+                  <div class="pipe">
+                    <b>1. Add product</b>
+                    <span class="ready">Dashboard ready</span>
+                    <span>Upload real photos, rough title, price, quantity, shipping and optional promo budget.</span>
+                  </div>
+                  <div class="pipe">
+                    <b>2. Listing cleanup</b>
+                    <span class="pending">Connection pending</span>
+                    <span>Title, description, category and SEO are cleaned without inventing product facts.</span>
+                  </div>
+                  <div class="pipe">
+                    <b>3. Publish + inventory</b>
+                    <span class="pending">Connection pending</span>
+                    <span>The product goes live and inventory becomes the source of truth for availability.</span>
+                  </div>
+                  <div class="pipe">
+                    <b>4. Promotion</b>
+                    <span class="pending">Connection pending</span>
+                    <span>Launch image, reel and carousel are generated from the real listing assets.</span>
+                  </div>
+                  <div class="pipe">
+                    <b>5. Sale + fulfillment</b>
+                    <span class="pending">Connection pending</span>
+                    <span>Stripe records the order, quantity updates, promotion stops and shipping moves into Orders.</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="panel activity-panel">
+                <div class="eyebrow">Performance</div>
+                <h2 class="panel-title">Store activity</h2>
+                <p class="small">These stay at zero until real products, traffic, promotion and orders are connected.</p>
+
+                <div class="data-grid">
+                  <div class="data-card"><b id="viewsTotal">0</b><span>Product views</span></div>
+                  <div class="data-card"><b id="clicksTotal">0</b><span>Store clicks</span></div>
+                  <div class="data-card"><b id="promoSpend">$0.00</b><span>Promo spend</span></div>
+                  <div class="data-card"><b id="avgDays">—</b><span>Avg. days live</span></div>
+                </div>
+              </div>
+            </section>
+
+            <!-- ADD PRODUCT -->
+            <section id="addSection" class="hidden-section">
+              <div class="section-header">
+                <div>
+                  <div class="eyebrow">New product</div>
+                  <h1 class="pageTitle">Add product.</h1>
+                </div>
+              </div>
+
+              <div class="panel">
+                <p class="small" style="margin-top:0">Upload the real product once. Listing cleanup, publishing and promotion will be handled by the connected workflow.</p>
+
+                <form id="productForm" class="product-form">
+                  <div class="full upload-box">
+                    <label class="label">Product photos (1–8)</label>
+                    <input class="input" name="images" type="file" accept="image/*" multiple required>
+                    <p class="form-note">Original product details are preserved. No fake changes to logos, condition, engravings, packaging or colors.</p>
+                  </div>
+
+                  <div>
+                    <label class="label">Rough title</label>
+                    <input class="input" name="title" required placeholder="Example: 2024 Dodgers ring">
+                  </div>
+
+                  <div>
+                    <label class="label">Selling price</label>
+                    <input class="input" name="price" type="number" min="0" step=".01" inputmode="decimal" required placeholder="0.00">
+                  </div>
+
+                  <div>
+                    <label class="label">What you paid</label>
+                    <input class="input" name="item_cost" type="number" min="0" step=".01" inputmode="decimal" value="0">
+                  </div>
+
+                  <div>
+                    <label class="label">Quantity</label>
+                    <input class="input" name="quantity" type="number" min="1" inputmode="numeric" value="1" required>
+                  </div>
+
+                  <div>
+                    <label class="label">Customer shipping charge</label>
+                    <input class="input" name="shipping_customer" type="number" min="0" step=".01" inputmode="decimal" value="0">
+                  </div>
+
+                  <div>
+                    <label class="label">Estimated shipping cost</label>
+                    <input class="input" name="shipping_cost_estimate" type="number" min="0" step=".01" inputmode="decimal" value="0">
+                  </div>
+
+                  <div>
+                    <label class="label">Optional paid promo budget</label>
+                    <input class="input" name="promo_budget_total" type="number" min="0" step=".01" inputmode="decimal" value="0">
+                    <p class="form-note">$0 = organic promotion only.</p>
+                  </div>
+
+                  <div class="full">
+                    <label class="label">Rough description (optional)</label>
+                    <textarea class="textarea" name="description" placeholder="Anything you know about the item"></textarea>
+                  </div>
+
+                  <div class="full">
+                    <button class="btn" type="submit">Optimize + Publish</button>
+                  </div>
+                </form>
+
+                <div id="publishStatus" class="small" style="margin-top:10px"></div>
+              </div>
+            </section>
+
+            <!-- INVENTORY -->
+            <section id="inventorySection" class="hidden-section">
+              <div class="section-header">
+                <div>
+                  <div class="eyebrow">Products</div>
+                  <h1 class="pageTitle">Inventory.</h1>
+                </div>
+              </div>
+
+              <div class="filter-row">
+                <button class="chip active" type="button" data-inv-filter="all">All</button>
+                <button class="chip" type="button" data-inv-filter="live">Live</button>
+                <button class="chip" type="button" data-inv-filter="pre-active">Pre-active</button>
+                <button class="chip" type="button" data-inv-filter="sold">Sold</button>
+              </div>
+
+              <div class="records" id="productRows"></div>
+            </section>
+
+            <!-- PROMOTION -->
+            <section id="promotionSection" class="hidden-section">
+              <div class="section-header">
+                <div>
+                  <div class="eyebrow">Marketing</div>
+                  <h1 class="pageTitle">Promotion.</h1>
+                </div>
+              </div>
+
+              <div class="panel">
+                <p class="small" style="margin-top:0">Organic promotion is the default plan. Paid promotion will remain optional and capped by the budget entered for each product.</p>
+                <div id="promoRows" class="records"></div>
+              </div>
+            </section>
+
+            <!-- ORDERS -->
+            <section id="ordersSection" class="hidden-section">
+              <div class="section-header">
+                <div>
+                  <div class="eyebrow">Orders + fulfillment</div>
+                  <h1 class="pageTitle">Orders.</h1>
+                </div>
+              </div>
+
+              <div class="empty-state">
+                <h3>No orders yet.</h3>
+                <p class="small" style="margin:0">When Stripe is connected, paid orders will appear here with customer shipping information, fulfillment status and tracking.</p>
+              </div>
+            </section>
+          </div>
         </div>
-
-
-        <div>
-
-          <h4>Shop</h4>
-
-          <a href="/shop/">
-            All products
-          </a>
-
-          <a href="/shop/#rings">
-            Championship rings
-          </a>
-
-          <a href="/shop/#jerseys">
-            Jerseys
-          </a>
-
-        </div>
-
-
-        <div>
-
-          <h4>Help</h4>
-
-          <a href="/policies/shipping/">
-            Shipping
-          </a>
-
-          <a href="/policies/returns/">
-            Returns
-          </a>
-
-          <a href="/policies/privacy/">
-            Privacy
-          </a>
-
-          <a href="/policies/terms/">
-            Terms
-          </a>
-
-        </div>
-
-      </div>
-
-
-      <div class="legal">
-
-        LammaJammer Collectibles is an independent retailer.
-
-        Team names, league names and trademarks belong to their respective owners.
-
-        Product listings should accurately state whether an item is licensed,
-        replica, vintage, used or otherwise.
-
-      </div>
-
+      </section>
     </div>
+  </main>
 
-  </footer>
+  <!-- PHONE NAV -->
+  <nav id="mobileBar" class="mobile-bar hidden" aria-label="Admin navigation">
+    <button class="active" type="button" data-mobile-section="overview"><span>⌂</span>Home</button>
+    <button type="button" data-mobile-section="add"><span>＋</span>Add</button>
+    <button type="button" data-mobile-section="inventory"><span>▦</span>Stock</button>
+    <button type="button" data-mobile-section="promotion"><span>↗</span>Promo</button>
+    <button type="button" data-mobile-section="orders"><span>□</span>Orders</button>
+  </nav>
 
+<script>
+  let PRODUCTS = [];
 
-  <script src="/assets/app.js"></script>
+  async function api(path, options = {}) {
+    return fetch(path, { credentials:'include', ...options });
+  }
 
+  function money(v){
+    return new Intl.NumberFormat('en-US',{
+      style:'currency',
+      currency:'USD'
+    }).format(Number(v || 0));
+  }
+
+  function escapeHtml(s=''){
+    return String(s).replace(/[&<>"']/g,c=>({
+      '&':'&amp;',
+      '<':'&lt;',
+      '>':'&gt;',
+      '"':'&quot;',
+      "'":'&#39;'
+    }[c]));
+  }
+
+  async function loadProducts(){
+    try{
+      const r = await fetch('/data/products.json?v=' + Date.now(), {cache:'no-store'});
+      PRODUCTS = r.ok ? await r.json() : [];
+    }catch{
+      PRODUCTS = [];
+    }
+    renderEverything();
+  }
+
+  function renderEverything(){
+    const live = PRODUCTS.filter(p=>p.status==='live');
+    const pre = PRODUCTS.filter(p=>p.status==='pre-active');
+    const sold = PRODUCTS.filter(p=>p.status==='sold' || Number(p.quantity)<=0);
+
+    document.getElementById('liveCount').textContent = live.length;
+    document.getElementById('preCount').textContent = pre.length;
+    document.getElementById('soldCount').textContent = sold.length;
+
+    const revenue = sold.reduce((sum,p)=>sum + (Number(p.price||0) * Number(p.sales||0)),0);
+    document.getElementById('revenue').textContent = money(revenue);
+
+    document.getElementById('viewsTotal').textContent =
+      PRODUCTS.reduce((sum,p)=>sum+Number(p.views||0),0);
+
+    document.getElementById('clicksTotal').textContent =
+      PRODUCTS.reduce((sum,p)=>sum+Number(p.clicks||0),0);
+
+    document.getElementById('promoSpend').textContent =
+      money(PRODUCTS.reduce((sum,p)=>sum+Number(p.promo_budget_spent||0),0));
+
+    const liveDays = PRODUCTS.filter(p=>Number(p.days_live)>0);
+    document.getElementById('avgDays').textContent =
+      liveDays.length
+      ? (liveDays.reduce((sum,p)=>sum+Number(p.days_live),0)/liveDays.length).toFixed(1)
+      : '—';
+
+    renderInventory('all');
+    renderPromotion();
+  }
+
+  function renderInventory(filter){
+    const root = document.getElementById('productRows');
+    const rows = PRODUCTS.filter(p => filter==='all' || p.status===filter);
+
+    if(!rows.length){
+      root.innerHTML = `
+        <div class="empty-state">
+          <h3>No ${filter==='all' ? 'products' : escapeHtml(filter) + ' products'} yet.</h3>
+          <p class="small" style="margin:0">Real inventory will appear here after products are imported or published.</p>
+        </div>`;
+      return;
+    }
+
+    root.innerHTML = `
+      <div class="record-head">
+        <div>Product</div><div>Price</div><div>Qty</div>
+        <div>Status</div><div>Views</div><div>Promotion</div>
+      </div>
+      ${rows.map(p=>`
+        <article class="record">
+          <div>
+            <strong>${escapeHtml(p.title)}</strong>
+            <div class="mini">${escapeHtml(p.league||'')} ${p.team ? '· '+escapeHtml(p.team) : ''}</div>
+          </div>
+          <div>${money(p.price)}</div>
+          <div>${Number(p.quantity||0)}</div>
+          <div>${escapeHtml(p.status||'')}</div>
+          <div>${Number(p.views||0)} views</div>
+          <div><span class="promo-pill">${escapeHtml(p.promo_status||'Not started')}</span></div>
+        </article>
+      `).join('')}
+    `;
+  }
+
+  function renderPromotion(){
+    const root = document.getElementById('promoRows');
+
+    if(!PRODUCTS.length){
+      root.innerHTML = `
+        <div class="empty-state">
+          <h3>No promotions running.</h3>
+          <p class="small" style="margin:0">Promotion records will appear after real products are published and the automation pipeline is connected.</p>
+        </div>`;
+      return;
+    }
+
+    root.innerHTML = PRODUCTS.map(p=>`
+      <article class="record">
+        <div>
+          <strong>${escapeHtml(p.title)}</strong>
+          <div class="mini">Launch image → Reel → Carousel</div>
+        </div>
+        <div>${money(p.promo_budget_total)} budget</div>
+        <div>${money(p.promo_budget_spent)} spent</div>
+        <div>${Number(p.clicks||0)} clicks</div>
+        <div>${Number(p.sales||0)} sales</div>
+        <div><span class="promo-pill">${escapeHtml(p.promo_status||'Not started')}</span></div>
+      </article>
+    `).join('');
+  }
+
+  function showSection(name){
+    ['overview','add','inventory','promotion','orders'].forEach(section=>{
+      document.getElementById(section+'Section')
+        .classList.toggle('hidden-section',section!==name);
+    });
+
+    document.querySelectorAll('[data-section-btn]').forEach(btn=>{
+      btn.classList.toggle('active',btn.dataset.sectionBtn===name);
+    });
+
+    document.querySelectorAll('[data-mobile-section]').forEach(btn=>{
+      btn.classList.toggle('active',btn.dataset.mobileSection===name);
+    });
+
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  document.querySelectorAll('[data-section-btn]').forEach(btn=>{
+    btn.addEventListener('click',()=>showSection(btn.dataset.sectionBtn));
+  });
+
+  document.querySelectorAll('[data-mobile-section]').forEach(btn=>{
+    btn.addEventListener('click',()=>showSection(btn.dataset.mobileSection));
+  });
+
+  document.querySelectorAll('[data-go-add]').forEach(btn=>{
+    btn.addEventListener('click',()=>showSection('add'));
+  });
+
+  document.querySelectorAll('[data-inv-filter]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('[data-inv-filter]').forEach(x=>x.classList.remove('active'));
+      btn.classList.add('active');
+      renderInventory(btn.dataset.invFilter);
+    });
+  });
+
+  document.getElementById('togglePassword').addEventListener('click',()=>{
+    const input = document.getElementById('password');
+    const btn = document.getElementById('togglePassword');
+    const visible = input.type === 'text';
+    input.type = visible ? 'password' : 'text';
+    btn.textContent = visible ? '👁' : '🙈';
+    btn.setAttribute('aria-label',visible ? 'Show password' : 'Hide password');
+  });
+
+  document.getElementById('loginForm').addEventListener('submit',async e=>{
+    e.preventDefault();
+    const status = document.getElementById('loginStatus');
+    status.textContent = 'Signing in…';
+
+    try{
+      const r = await api('/api/login',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          password:document.getElementById('password').value.trim()
+        })
+      });
+
+      let body={};
+      try{ body=await r.json(); }catch{}
+
+      if(!r.ok){
+        status.textContent = body.error || `Login failed (${r.status}).`;
+        return;
+      }
+
+      status.textContent='';
+      document.getElementById('password').value='';
+      await checkSession();
+
+    }catch{
+      status.textContent='Could not reach the login API.';
+    }
+  });
+
+  document.getElementById('logoutBtn').addEventListener('click',async()=>{
+    await api('/api/logout',{method:'POST'});
+    location.reload();
+  });
+
+  document.getElementById('productForm').addEventListener('submit',async e=>{
+    e.preventDefault();
+
+    const status = document.getElementById('publishStatus');
+    status.textContent='Preparing product…';
+
+    const fd = new FormData(e.target);
+    const files = [...fd.getAll('images')];
+    const images=[];
+
+    for(const f of files){
+      if(f && f.size) images.push(await toDataURL(f));
+    }
+
+    const payload={
+      action:'publish',
+      title:fd.get('title'),
+      description:fd.get('description'),
+      price:Number(fd.get('price')||0),
+      item_cost:Number(fd.get('item_cost')||0),
+      quantity:Number(fd.get('quantity')||1),
+      shipping_customer:Number(fd.get('shipping_customer')||0),
+      shipping_cost_estimate:Number(fd.get('shipping_cost_estimate')||0),
+      promo_budget_total:Number(fd.get('promo_budget_total')||0),
+      images
+    };
+
+    try{
+      const r=await api('/api/publish-product',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(payload)
+      });
+
+      let body={};
+      try{ body=await r.json(); }catch{}
+
+      if(!r.ok){
+        status.textContent = body.error || 'Publishing connection is not live yet. Nothing was published.';
+        return;
+      }
+
+      status.textContent='Sent to the product pipeline successfully.';
+    }catch{
+      status.textContent='Publishing connection is not live yet. Nothing was published.';
+    }
+  });
+
+  function toDataURL(file){
+    return new Promise((resolve,reject)=>{
+      const reader=new FileReader();
+      reader.onload=()=>resolve(reader.result);
+      reader.onerror=reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function checkSession(){
+    try{
+      const r = await api('/api/admin-products');
+
+      if(!r.ok) throw new Error();
+
+      document.getElementById('authPanel').classList.add('hidden');
+      document.getElementById('adminApp').classList.remove('hidden');
+      document.getElementById('mobileBar').classList.remove('hidden');
+
+      await loadProducts();
+    }catch{
+      document.getElementById('authPanel').classList.remove('hidden');
+      document.getElementById('adminApp').classList.add('hidden');
+      document.getElementById('mobileBar').classList.add('hidden');
+    }
+  }
+
+  checkSession();
+</script>
 </body>
 </html>
