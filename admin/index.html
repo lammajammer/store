@@ -1,32 +1,307 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Lamajammer OS</title><link rel="stylesheet" href="/assets/styles.css"><script src="https://accounts.google.com/gsi/client" async defer></script></head><body>
-<div class="topline">Lamajammer OS · Private admin</div><main class="section"><div class="wrap">
-<div class="head"><div><div class="eyebrow">Dad dashboard</div><h1 class="pageTitle">Lamajammer OS</h1></div><a class="btn secondary" href="/">View store</a></div>
-<div id="authPanel" class="panel"><h3>Sign in</h3><p class="small">Only the Google account configured in Vercel as ADMIN_EMAIL can publish or manage products.</p><div id="g_id_onload" data-client_id="REPLACE_WITH_GOOGLE_CLIENT_ID" data-callback="handleCredentialResponse" data-auto_prompt="false"></div><div class="g_id_signin" data-type="standard"></div></div>
-<div id="adminApp" class="hidden">
-<div class="statGrid"><div class="stat"><b id="liveCount">—</b><span>Live</span></div><div class="stat"><b id="soldCount">—</b><span>Sold out</span></div><div class="stat"><b id="orderCount">—</b><span>Orders</span></div><div class="stat"><b id="revenue">—</b><span>Revenue</span></div></div>
-<div class="section" style="padding-bottom:25px"><div class="panel"><div class="eyebrow">Add product</div><h2 style="font:500 34px Georgia">Upload once. Let the system clean it up.</h2>
-<form id="productForm" class="formGrid"><div class="full"><label class="label">Product photos (1–8)</label><input class="input" name="images" type="file" accept="image/*" multiple required><p class="small">AI may recommend crop/exposure cleanup, but may never invent or alter product details.</p></div>
-<div><label class="label">Rough title</label><input class="input" name="title" required placeholder="ex: 2024 dodgers ring"></div><div><label class="label">Price</label><input class="input" name="price" type="number" min="0" step=".01" required></div>
-<div class="full"><label class="label">Rough description (optional)</label><textarea class="textarea" name="description" placeholder="Anything you know about the item"></textarea></div>
-<div><label class="label">Quantity</label><input class="input" name="quantity" type="number" min="1" value="1" required></div><div><label class="label">Shipping price</label><input class="input" name="shipping" type="number" min="0" step=".01" value="0"></div>
-<div class="full"><button class="btn" type="submit">Optimize + Publish</button></div></form><div id="publishStatus" class="small" style="margin-top:12px"></div></div></div>
-<div class="panel"><div class="row"><h3>Products</h3><button class="btn secondary" onclick="loadAdmin()">Refresh</button></div><div style="overflow:auto"><table><thead><tr><th>Product</th><th>Price</th><th>Qty</th><th>Status</th><th>Action</th></tr></thead><tbody id="productRows"></tbody></table></div></div>
-</div></div></main>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>LammaJammer OS</title>
+  <link rel="icon" type="image/png" href="/assets/LJ-logo-circle.png">
+  <link rel="stylesheet" href="/assets/styles.css">
+  <style>
+    .auth-wrap{max-width:560px;margin:70px auto}
+    .auth-row{display:flex;gap:10px}
+    .auth-row .input{flex:1}
+    .admin-shell{display:grid;grid-template-columns:210px 1fr;gap:20px}
+    .admin-side{position:sticky;top:110px;height:max-content}
+    .admin-side img{width:150px;margin:0 auto 18px}
+    .admin-side button{width:100%;text-align:left;margin:5px 0}
+    .admin-block{margin-bottom:20px}
+    .admin-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 18px}
+    .pipeline{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+    .pipe{padding:15px;border:1px solid var(--line);background:#071421;border-radius:15px;min-height:110px}
+    .pipe b{display:block;margin-bottom:7px}
+    .pipe span{font-size:11px;color:#8fa2b4;line-height:1.45}
+    .pipe .ok{color:#6fd09a}
+    .pipe .wait{color:#f0b36d}
+    .product-list{display:grid;gap:10px}
+    .product-row{display:grid;grid-template-columns:1.7fr .6fr .45fr .6fr .7fr .7fr;gap:10px;align-items:center;padding:14px;border:1px solid var(--line);background:#071421;border-radius:14px}
+    .product-row.headrow{background:transparent;border:0;padding-top:0;padding-bottom:4px;color:#8fa2b4;font-size:9px;text-transform:uppercase;letter-spacing:.12em}
+    .product-row strong{font-family:Georgia,serif}
+    .mini{font-size:10px;color:#8fa2b4;margin-top:4px}
+    .promo-pill{font-size:9px;padding:5px 8px;border-radius:999px;border:1px solid #486380;display:inline-block}
+    .promo-active{border-color:#cf3041;color:#ff8d98}
+    .promo-queued{border-color:#b88a42;color:#eac487}
+    .promo-stopped{border-color:#4c6177;color:#8fa2b4}
+    .preview-note{background:#172439;border:1px solid #3f5f7e;border-radius:14px;padding:12px 14px;margin-bottom:18px;color:#b9c6d2;font-size:11px;line-height:1.5}
+    .data-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+    .data-card{border:1px solid var(--line);border-radius:14px;padding:15px;background:#071421}
+    .data-card b{font:700 25px Georgia;display:block}
+    .data-card span{font-size:9px;color:#8fa2b4;text-transform:uppercase;letter-spacing:.12em}
+    .hidden-section{display:none}
+    @media(max-width:900px){
+      .admin-shell{grid-template-columns:1fr}.admin-side{position:static}.admin-side img{width:130px;margin-left:0}
+      .pipeline{grid-template-columns:1fr 1fr}.product-row{grid-template-columns:1fr 1fr}.product-row.headrow{display:none}
+      .data-grid{grid-template-columns:1fr 1fr}
+    }
+    @media(max-width:560px){.auth-row{display:block}.auth-row button{width:100%;margin-top:8px}.pipeline{grid-template-columns:1fr}.data-grid{grid-template-columns:1fr 1fr}}
+  </style>
+</head>
+<body>
+<div class="topline">LammaJammer OS · Private Admin</div>
+
+<main class="section">
+  <div class="wrap">
+
+    <div id="authPanel" class="panel auth-wrap">
+      <img src="/assets/LJ-logo-horizontal.png" style="width:300px;max-width:100%;margin:0 auto 20px" alt="LammaJammer Collectibles">
+      <h3>Dad's dashboard</h3>
+      <p class="small">Enter the private admin password.</p>
+      <form id="loginForm" class="auth-row">
+        <input class="input" id="password" type="password" autocomplete="current-password" placeholder="Admin password" required>
+        <button class="btn" type="submit">Enter</button>
+      </form>
+      <div id="loginStatus" class="small" style="margin-top:12px"></div>
+    </div>
+
+    <div id="adminApp" class="hidden">
+      <div class="admin-shell">
+
+        <aside class="admin-side panel">
+          <img src="/assets/LJ-logo-circle.png" alt="LammaJammer Collectibles">
+          <button class="chip active" data-section-btn="overview">Overview</button>
+          <button class="chip" data-section-btn="add">+ Add product</button>
+          <button class="chip" data-section-btn="inventory">Inventory</button>
+          <button class="chip" data-section-btn="promotion">Promotion</button>
+          <a class="chip" style="display:block;margin-top:14px" href="/" target="_blank">View storefront ↗</a>
+          <button class="chip" id="logoutBtn" type="button" style="margin-top:14px">Log out</button>
+        </aside>
+
+        <div>
+          <div class="preview-note">
+            <b>Preview mode:</b> tonight's dashboard shows the intended hands-free workflow and sample inventory. Product publishing is being connected to Make/Google/Stripe next.
+          </div>
+
+          <section id="overviewSection">
+            <div class="head">
+              <div><div class="eyebrow">Dad dashboard</div><h1 class="pageTitle">Store overview.</h1></div>
+              <button class="btn" type="button" data-go-add>+ Add product</button>
+            </div>
+
+            <div class="statGrid">
+              <div class="stat"><b id="liveCount">—</b><span>Live products</span></div>
+              <div class="stat"><b id="preCount">—</b><span>Pre-active</span></div>
+              <div class="stat"><b id="soldCount">—</b><span>Sold</span></div>
+              <div class="stat"><b id="revenue">$0</b><span>Revenue demo</span></div>
+            </div>
+
+            <div class="section" style="padding:24px 0 0">
+              <div class="panel">
+                <div class="row"><div><div class="eyebrow">Hands-free promotion</div><h2 style="font:700 30px Georgia;margin:8px 0">What happens after Publish</h2></div><span class="promo-pill promo-active">AUTOMATIC</span></div>
+                <div class="pipeline">
+                  <div class="pipe"><b>1. Listing cleanup</b><span class="ok">Automatic</span><span>Title, description, category, SEO and photo ranking.</span></div>
+                  <div class="pipe"><b>2. Store goes live</b><span class="ok">Automatic</span><span>Product appears in the right league/category and inventory.</span></div>
+                  <div class="pipe"><b>3. Launch image</b><span class="wait">Queued</span><span>Brand-correct static post from the real product photo.</span></div>
+                  <div class="pipe"><b>4. Reel + carousel</b><span class="wait">Scheduled</span><span>Portrait reel + follow-up carousel if the item is still available.</span></div>
+                  <div class="pipe"><b>5. Sale stops promo</b><span class="ok">Automatic</span><span>Stripe sale updates quantity and cancels remaining promotion.</span></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="section" style="padding:20px 0 0">
+              <div class="panel">
+                <div class="eyebrow">Snapshot</div>
+                <h2 style="font:700 28px Georgia;margin:8px 0 16px">What Dad will see at a glance</h2>
+                <div class="data-grid">
+                  <div class="data-card"><b id="viewsTotal">—</b><span>Product views</span></div>
+                  <div class="data-card"><b id="clicksTotal">—</b><span>Store clicks</span></div>
+                  <div class="data-card"><b id="promoSpend">$—</b><span>Promo spend</span></div>
+                  <div class="data-card"><b id="avgDays">—</b><span>Avg. days live</span></div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="addSection" class="hidden-section">
+            <div class="head"><div><div class="eyebrow">New product</div><h1 class="pageTitle">Upload it once.</h1></div></div>
+            <div class="panel">
+              <p class="small">Dad supplies the real product, price and inventory. The system handles cleanup, publishing and promotion.</p>
+              <form id="productForm" class="formGrid">
+                <div class="full">
+                  <label class="label">Product photos (1–8)</label>
+                  <input class="input" name="images" type="file" accept="image/*" multiple required>
+                  <p class="small">Original product details are preserved. No fake changes to logos, condition, engravings or packaging.</p>
+                </div>
+                <div><label class="label">Rough title</label><input class="input" name="title" required placeholder="ex: 2024 dodgers ring"></div>
+                <div><label class="label">Selling price</label><input class="input" name="price" type="number" min="0" step=".01" required></div>
+                <div><label class="label">What you paid</label><input class="input" name="item_cost" type="number" min="0" step=".01" value="0"></div>
+                <div><label class="label">Quantity</label><input class="input" name="quantity" type="number" min="1" value="1" required></div>
+                <div><label class="label">Customer shipping charge</label><input class="input" name="shipping_customer" type="number" min="0" step=".01" value="0"></div>
+                <div><label class="label">Estimated shipping cost</label><input class="input" name="shipping_cost_estimate" type="number" min="0" step=".01" value="0"></div>
+                <div>
+                  <label class="label">Optional paid promo budget</label>
+                  <input class="input" name="promo_budget_total" type="number" min="0" step=".01" value="0">
+                  <p class="small">$0 = free organic promotion only.</p>
+                </div>
+                <div class="full"><label class="label">Rough description (optional)</label><textarea class="textarea" name="description" placeholder="Anything you know about the item"></textarea></div>
+                <div class="full"><button class="btn" type="submit">Optimize + Publish</button></div>
+              </form>
+              <div id="publishStatus" class="small" style="margin-top:12px"></div>
+            </div>
+          </section>
+
+          <section id="inventorySection" class="hidden-section">
+            <div class="head"><div><div class="eyebrow">Inventory</div><h1 class="pageTitle">Everything in one place.</h1></div></div>
+            <div class="admin-tabs">
+              <button class="chip active" data-inv-filter="all">All</button>
+              <button class="chip" data-inv-filter="live">Live</button>
+              <button class="chip" data-inv-filter="pre-active">Pre-active</button>
+              <button class="chip" data-inv-filter="sold">Sold</button>
+            </div>
+            <div class="product-list" id="productRows"></div>
+          </section>
+
+          <section id="promotionSection" class="hidden-section">
+            <div class="head"><div><div class="eyebrow">Promotion</div><h1 class="pageTitle">Hands-free by default.</h1></div></div>
+            <div class="panel">
+              <p class="small">Every live product gets free organic promotion. Paid budget is optional and always capped by Dad.</p>
+              <div id="promoRows" class="product-list"></div>
+            </div>
+          </section>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
 <script>
-let ID_TOKEN='';
-async function handleCredentialResponse(resp){ID_TOKEN=resp.credential;sessionStorage.setItem('lj_token',ID_TOKEN);document.getElementById('authPanel').classList.add('hidden');document.getElementById('adminApp').classList.remove('hidden');loadAdmin()}
-window.addEventListener('load',()=>{const t=sessionStorage.getItem('lj_token');if(t){ID_TOKEN=t;document.getElementById('authPanel').classList.add('hidden');document.getElementById('adminApp').classList.remove('hidden');loadAdmin()}})
-async function loadAdmin(){
- const r=await fetch('/api/admin-products',{headers:{Authorization:'Bearer '+ID_TOKEN}}); if(!r.ok){sessionStorage.removeItem('lj_token');location.reload();return}
- const j=await r.json();const ps=j.products||[];document.getElementById('liveCount').textContent=ps.filter(x=>x.status==='live').length;document.getElementById('soldCount').textContent=ps.filter(x=>Number(x.quantity)<=0).length;document.getElementById('orderCount').textContent=j.stats?.orders||0;document.getElementById('revenue').textContent='$'+Number(j.stats?.revenue||0).toFixed(2);
- document.getElementById('productRows').innerHTML=ps.map(p=>`<tr><td>${p.title}</td><td>${Number(p.price).toFixed(2)}</td><td>${p.quantity}</td><td class="status-${p.status}">${p.status}</td><td><button class="chip" onclick="archiveProduct('${p.id}')">Archive</button></td></tr>`).join('')
+let PRODUCTS = [];
+
+async function api(path, options = {}) {
+  return fetch(path, { credentials:'include', ...options });
 }
-async function archiveProduct(id){if(!confirm('Archive this product?'))return;await fetch('/api/publish-product',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+ID_TOKEN},body:JSON.stringify({action:'archive',productId:id})});loadAdmin()}
-document.getElementById('productForm').addEventListener('submit',async e=>{e.preventDefault();const s=document.getElementById('publishStatus');s.textContent='Preparing product…';
- const fd=new FormData(e.target);const files=[...fd.getAll('images')];const images=[];
- for(const f of files){if(!f||!f.size)continue;images.push(await toDataURL(f))}
- const payload={action:'publish',title:fd.get('title'),description:fd.get('description'),price:Number(fd.get('price')),quantity:Number(fd.get('quantity')),shipping:Number(fd.get('shipping')),images};
- const r=await fetch('/api/publish-product',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+ID_TOKEN},body:JSON.stringify(payload)});const j=await r.json(); if(!r.ok){s.textContent=j.error||'Publish failed';return}s.textContent='Published successfully.';e.target.reset();loadAdmin()
-})
+
+async function loadDemoProducts(){
+  const r = await fetch('/data/products.json?v='+Date.now(), {cache:'no-store'});
+  PRODUCTS = await r.json();
+  renderEverything();
+}
+
+async function checkSession(){
+  const r = await api('/api/admin-products');
+  if(r.ok){
+    document.getElementById('authPanel').classList.add('hidden');
+    document.getElementById('adminApp').classList.remove('hidden');
+    await loadDemoProducts();
+  }else{
+    document.getElementById('authPanel').classList.remove('hidden');
+    document.getElementById('adminApp').classList.add('hidden');
+  }
+}
+
+function money(v){return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(Number(v||0))}
+function escapeHtml(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+
+function renderEverything(){
+  const live=PRODUCTS.filter(p=>p.status==='live');
+  const pre=PRODUCTS.filter(p=>p.status==='pre-active');
+  const sold=PRODUCTS.filter(p=>p.status==='sold'||Number(p.quantity)<=0);
+  document.getElementById('liveCount').textContent=live.length;
+  document.getElementById('preCount').textContent=pre.length;
+  document.getElementById('soldCount').textContent=sold.length;
+  document.getElementById('revenue').textContent=money(sold.reduce((s,p)=>s+(Number(p.price||0)*Number(p.sales||0)),0));
+  document.getElementById('viewsTotal').textContent=PRODUCTS.reduce((s,p)=>s+Number(p.views||0),0);
+  document.getElementById('clicksTotal').textContent=PRODUCTS.reduce((s,p)=>s+Number(p.clicks||0),0);
+  document.getElementById('promoSpend').textContent=money(PRODUCTS.reduce((s,p)=>s+Number(p.promo_budget_spent||0),0));
+  const liveDays=PRODUCTS.filter(p=>Number(p.days_live)>0);
+  document.getElementById('avgDays').textContent=liveDays.length ? (liveDays.reduce((s,p)=>s+Number(p.days_live),0)/liveDays.length).toFixed(1) : '—';
+  renderInventory('all');
+  renderPromo();
+}
+
+function renderInventory(filter){
+  const root=document.getElementById('productRows');
+  const ps=PRODUCTS.filter(p=>filter==='all'||p.status===filter);
+  root.innerHTML = `
+    <div class="product-row headrow"><div>Product</div><div>Price</div><div>Qty</div><div>Status</div><div>Views</div><div>Promo</div></div>
+    ${ps.map(p=>`
+      <div class="product-row">
+        <div><strong>${escapeHtml(p.title)}</strong><div class="mini">${escapeHtml(p.league||'')} · ${escapeHtml(p.team||'')}</div></div>
+        <div>${money(p.price)}</div>
+        <div>${Number(p.quantity||0)}</div>
+        <div>${escapeHtml(p.status)}</div>
+        <div>${Number(p.views||0)}</div>
+        <div><span class="promo-pill ${p.promo_status.includes('active')?'promo-active':p.promo_status.includes('queued')||p.promo_status.includes('waiting')?'promo-queued':'promo-stopped'}">${escapeHtml(p.promo_status)}</span></div>
+      </div>`).join('')}
+  `;
+}
+
+function renderPromo(){
+  const root=document.getElementById('promoRows');
+  root.innerHTML = PRODUCTS.map(p=>`
+    <div class="product-row">
+      <div><strong>${escapeHtml(p.title)}</strong><div class="mini">Static → Reel → Carousel</div></div>
+      <div>${money(p.promo_budget_total)} budget</div>
+      <div>${money(p.promo_budget_spent)} spent</div>
+      <div>${Number(p.clicks||0)} clicks</div>
+      <div>${Number(p.sales||0)} sales</div>
+      <div><span class="promo-pill ${p.promo_status.includes('active')?'promo-active':p.promo_status.includes('queued')||p.promo_status.includes('waiting')?'promo-queued':'promo-stopped'}">${escapeHtml(p.promo_status)}</span></div>
+    </div>`).join('');
+}
+
+document.querySelectorAll('[data-section-btn]').forEach(btn=>btn.onclick=()=>showSection(btn.dataset.sectionBtn));
+document.querySelectorAll('[data-go-add]').forEach(btn=>btn.onclick=()=>showSection('add'));
+function showSection(name){
+  ['overview','add','inventory','promotion'].forEach(n=>document.getElementById(n+'Section').classList.toggle('hidden-section',n!==name));
+  document.querySelectorAll('[data-section-btn]').forEach(b=>b.classList.toggle('active',b.dataset.sectionBtn===name));
+}
+
+document.querySelectorAll('[data-inv-filter]').forEach(btn=>btn.onclick=()=>{
+  document.querySelectorAll('[data-inv-filter]').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderInventory(btn.dataset.invFilter);
+});
+
+document.getElementById('loginForm').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const status=document.getElementById('loginStatus');
+  status.textContent='Signing in…';
+  const r=await api('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:document.getElementById('password').value})});
+  if(!r.ok){status.textContent='Wrong password or login not configured yet.';return}
+  status.textContent='';
+  document.getElementById('password').value='';
+  checkSession();
+});
+
+document.getElementById('logoutBtn').onclick=async()=>{await api('/api/logout',{method:'POST'});location.reload()};
+
+document.getElementById('productForm').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const s=document.getElementById('publishStatus');
+  s.textContent='Preparing product…';
+  const fd=new FormData(e.target);
+  const files=[...fd.getAll('images')];
+  const images=[];
+  for(const f of files){if(f&&f.size)images.push(await toDataURL(f))}
+  const payload={
+    action:'publish',
+    title:fd.get('title'),
+    description:fd.get('description'),
+    price:Number(fd.get('price')||0),
+    item_cost:Number(fd.get('item_cost')||0),
+    quantity:Number(fd.get('quantity')||1),
+    shipping_customer:Number(fd.get('shipping_customer')||0),
+    shipping_cost_estimate:Number(fd.get('shipping_cost_estimate')||0),
+    promo_budget_total:Number(fd.get('promo_budget_total')||0),
+    images
+  };
+  const r=await api('/api/publish-product',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+  if(!r.ok){s.textContent='Pipeline is not fully connected yet — form layout is ready.';return}
+  s.textContent='Sent to product pipeline successfully.';
+});
+
 function toDataURL(f){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(f)})}
-</script></body></html>
+
+checkSession();
+</script>
+</body>
+</html>
